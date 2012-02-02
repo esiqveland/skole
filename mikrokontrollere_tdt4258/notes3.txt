@@ -1,0 +1,27 @@
+arm
+
+memory mapped I/O on external bus
+
+device interface
+	- serial
+		- cheap, req few pins
+		- serial stream of bits
+	- parallell
+		- many bits at once
+bus types
+	synchronous/async
+	sync
+		- data r/w in sync with bus clock
+	async
+		-
+
+interrupts
+	- armv7
+		- fast irq
+		- irq
+		- save pc, registers
+		- disable interrupts
+		- fetch interrupt routine
+		  - enter interrupt routine
+			- execute
+		

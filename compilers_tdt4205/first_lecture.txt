@@ -1,0 +1,121 @@
+﻿TDT4205 Compilers
+
+source code: optimized for humans
+	- matches notion of grammar
+	- redundant to avoid program errors
+	- computation not fully determined by code
+	
+int expr(int n)
+{
+	int d;
+	d = 4 * n * n * (n+1) * (n+1);
+	return d;
+}
+	assembly code ~~ machine code
+
+how to translate correctly & effectively
+	source code & machine code mismatch
+
+goals:
+ - source-level expressions for tasks
+ - best perf. for computation
+ - reasonable translation efficiency ( <O(n^3) )
+ - maintainable compiler code
+
+ --> correctness - the compiler should NOT mess up (correct) code
+
+	some high-level source code
+			|
+		   ???
+			|
+		low-level code
+	
+	translate in 
+	compiler uses several intermediate representations 
+	
+compiling:
+	source code:
+	(character stream) if (b==0) a=b; --> lexical analysis
+														|
+	generates token stream:  |if|(|b|==|0|)|a|=|b|;|	|
+														|
+						if								v
+					   /   \							parsing (creates abstract syntax tree)
+				bool  =		  =	boolean					|--> semantic analysis	
+					/   \    / \
+					b   0   a   b 
+Decorated AST:     int int int int
+		|--> until now is called the frontend. this part is only related to the language
+	|--> intermediate code generation | backend of a compiler. related to the actual architecture currently on.
+		--> if b==0 goto L1 else L2
+		    L1: a=b
+			L2:
+	|--> optimization, code generation
+		 cmp  rb, 0
+		 jnz  L2
+		 mov ra,rb
+		 L2:
+	|--> (cpu) register allocation, optimization
+		cmp ecx,0
+		mov ebp,0,ecx
+		
+
+even bigger picture:
+		source code
+		|--> compiler
+		assembly code
+		|--> assembler
+		object	code (machine code + symbol tables)
+		|--> linker
+	fully !?!?
+	(machine code + symbol table + relocation !?!?)
+		|--> loader
+		|--> executable image in memory
+		
+lexical analysis
+	the lexical analysis generates a token stream
+	aka tokenizing aka scanning aka lexing
+	
+	- convert character stream to token stream of pairs <token type, attribute>
+		if (x1*x2<1.0) {
+			y=x1;
+		}
+		
+		|i|f| |(|......
+		tokens:
+			|if| |(| |Id,x1| |*| |Id,x2| |<| |float,1.0| .....
+		- get rid of whitespaces, comments
+		
+		Tokens
+			identifiers: X yl1	else -i0
+			literals: if else while break
+			integers
+			floats
+			symbols: * = ++ { << < 
+			strings 
+			comments /* dont change this */
+	
+	ad hoc lexer
+		hand-write code to generate tokens
+	
+	how to read identifier tokens ?
+		token_identifier () {
+			while(true) {
+				char c = input;
+				if(!identifier(
+			}
+	look-ahead character
+		- scan text one char at a time
+		- use the next one ahead to determine what token to read and when current token ends)
+		
+		problem: cannot see what type based on the current char
+		--> lexer
+			generates efficient tokenizer automatically (eg. lex, flex ???)
+	
+
+	
+	bottom-up parsing:
+		- do not need to find the absolute root of the parse-tree, in contrast to top-down parsing
+		- shift: move lookahead token to stack
+		- reduce: reduce a topmost element using an inverse production
+	

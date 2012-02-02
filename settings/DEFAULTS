@@ -1,0 +1,12 @@
+# copy bashrc, inputrc, vimrc:
+cp bashrc ~/.bashrc
+cp inputrc ~/.inputrc
+cp vimrc ~/.vimrc
+
+# set git author:
+git config --global user.name "Eivind Siqveland Larsen"
+git config --global user.email to.eivind@gmail.com
+
+# git clone repo:
+#git ssh+git://eivinlar@asti.idi.ntnu.no/amd/bonn/pool/home/b/20/eivinlar/src.git
+

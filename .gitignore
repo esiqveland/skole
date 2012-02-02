@@ -1,0 +1,40 @@
+# NetBeans specific #
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Class Files #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+.classpath
+.project
+target
+build
+node_modules
+
+# C/C++
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.elf
+
+# Compiled Dynamic libraries
+*.so
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Others
+*.swp

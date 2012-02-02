@@ -1,0 +1,11 @@
+
+Task2)
+lexical analyzer produces a sequence of tokens from a sequence of characters.
+An acceptor is a FSM that validates a sequence of characters or tokens by accepting it or not.
+
+Task3)
+
+
+       1 
+start ---> 
+
