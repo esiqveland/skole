@@ -2,6 +2,7 @@
 cp bashrc ~/.bashrc
 cp inputrc ~/.inputrc
 cp vimrc ~/.vimrc
+cp gitconfig ~/.gitconfig
 
 # set git author:
 git config --global user.name "Eivind Siqveland Larsen"
