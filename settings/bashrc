@@ -1,0 +1,14 @@
+#. /local/skel/all.bashrc
+
+#export PS1="\e[32;40m\w> \e[0m"
+# root user 
+#export PS1='\[\033[01;31m\]\h \[\033[01;34m\]\W \$ \[\033[00m\]' 
+#                      red               blue 
+# normal user 
+export PS1='\[\033[01;32m\]\u@\h \[\033[01;34m\]\W \$ \[\033[00m\]' 
+#                      green                blue
+alias ls='ls --color=always'
+
+export SHELL="/bin/bash"
+export LC_ALL="en_US.UTF8"
+
