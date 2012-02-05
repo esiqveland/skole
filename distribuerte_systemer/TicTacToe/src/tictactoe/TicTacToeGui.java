@@ -2,7 +2,10 @@ package tictactoe;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import javax.swing.*;
 
 /**
@@ -125,7 +128,7 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
                         
                     } catch (RemoteException e) {
                         System.out.println("RemoteException: "+e.getMessage());
-                        System.err.println(e.getStackTrace());
+                        e.printStackTrace();
                     }
                 } else {
                     System.out.println("FAIL: remoteobj was null for player " + this.myMark);
