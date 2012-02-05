@@ -35,6 +35,10 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 	private String myName;
 	/** The mark used by this player ('X' or 'O') */
 	private char myMark;
+        private char charTurn;
+        private boolean isDone;
+
+        
 
 	/**
 	 * Creates a new GUI.
@@ -44,6 +48,9 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 	public TicTacToeGui(String name, char mark) {
 		myName = name;
 		myMark = mark;
+                charTurn = 'O';
+                isDone = false;
+
 
 		// Create GUI components:
 		// The display at the bottom:
@@ -141,11 +148,112 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 	 * @param column	The column of the square to mark.
 	 * @param mark		The mark to use.
 	 */
-	public void setMark(int row, int column, char mark) {
-		board[row][column].setMark(mark);
-		repaint();
+	public void setMark(int row, int column, char mark) {	
+            if(validMove(row, column, mark)){
+                board[row][column].setMark(mark);
+		if(isWinner(row, column, mark)){
+                   isDone = true;
+                   if(mark == myMark) {
+                       display.setText("You win!\nGame --> New game to start again.");
+                   } else {
+                       display.setText("You lose!\nGame --> New game to start again.");
+                   }
+                   
+                   System.out.print("Player: " + mark + " wins!");
+                }
+                charTurn = charTurn=='X'? 'O': 'X';
+
+                repaint();
+            }
 	}
 
+        public boolean validMove(int row, int column, char mark){
+            if(mark == charTurn && board[row][column].getMark() == ' ' && !isDone){
+               return true;
+            }
+            return false;
+        }
+
+        public boolean isWinner(int row, int column, char mark){
+            /*
+             * Counters in the three directions
+             * local variable for row and col
+             */
+
+            int counterX = 0;
+            int counterY = 0;
+            int counterZ = 0;
+            int localRow = row;
+            int localColumn = column;
+
+            for(int i = 0;i<Constants.BOARD_SIZE;i++){
+                //Horizontal check
+                if(board[row][i].getMark() == mark){
+                    counterX++;
+                    if(counterX >= 5)return true;
+                } else {
+                    counterX = 0;
+                }
+
+                //Vertical check
+                if(board[i][column].getMark() == mark){
+                    counterY++;
+                    if(counterY >= 5)return true;
+                } else {
+                    counterY = 0;
+                }
+
+            }
+            //Diagonal check
+
+            //find top left intersect with edge of board
+            while(!(localRow == 0 || localColumn == 0)){
+                localRow--;
+                localColumn--;
+                
+                if(localRow < 0)localRow = 0;
+                if(localColumn < 0)localColumn = 0;
+            }
+            //traverse the diagonal to see if theres 5 in a row
+            while(localRow < Constants.BOARD_SIZE && localColumn < Constants.BOARD_SIZE){
+                if(board[localRow][localColumn].getMark() == mark){
+                    counterZ++;
+                    if(counterZ >= Constants.WINNER_LENGTH)return true;
+                } else {
+                    counterZ = 0;
+                }
+                localRow++;
+                localColumn++;
+            }
+
+            //reset locals
+            localRow = row;
+            localColumn = column;
+            counterZ = 0;
+
+            //find bottom left intersect with edge of board
+            while(!(localRow == 0 || localColumn == Constants.BOARD_SIZE - 1)){
+                localRow--;
+                localColumn++;
+
+                if(localRow < 0)localRow = 0;
+                if(localColumn == Constants.BOARD_SIZE)localColumn--;
+            }
+
+            //traverse the diagonal to see if theres 5 in a row
+            while(localRow < Constants.BOARD_SIZE && localColumn >= 0){
+                if(board[localRow][localColumn].getMark() == mark){
+                    counterZ++;
+                    if(counterZ >= Constants.WINNER_LENGTH)return true;
+                } else {
+                    counterZ = 0;
+                }
+                localRow++;
+                localColumn--;
+            }
+            return false;
+        
+    }
         public void setActionObject(Action o) {
             remoteobj = o;
             //try {
@@ -161,9 +269,9 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 	 * @param e	The ActionEvent that occured.
 	 */
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == newGameItem)
+		if(e.getSource() == newGameItem) {
 			newGame();
-		else if(e.getSource() == quitItem)
+                } else if(e.getSource() == quitItem)
 			quit();
 	}
 
@@ -174,6 +282,7 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 		// This method must be modified!
 		if(JOptionPane.showConfirmDialog(this, "Are you sure you want to start a new game?", "Start over?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			clearBoard();
+                        isDone = false;
 		}
 	}
 
@@ -184,7 +293,8 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 	 * Removes all marks from the board.
 	 */
 	public void clearBoard() {
-		for(int row = 0; row < board.length; row++)
+		charTurn = 'O';
+                for(int row = 0; row < board.length; row++)
 			for(int col = 0; col < board[row].length; col++)
 				board[row][col].setMark(' ');
 		repaint();

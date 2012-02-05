@@ -121,4 +121,8 @@ public class TicTacToe extends UnicastRemoteObject implements Action, Constants 
             
         }
     }
+    
+    public void newGame() throws RemoteException {
+        gui.newGame();
+    }
 }
