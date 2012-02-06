@@ -17,6 +17,6 @@ import java.rmi.RemoteException;
 public interface Action extends Remote {
    
     public void sendMove(int x, int y, char myChar) throws RemoteException;
-    public void getPlayer2() throws RemoteException;
+    public void getPlayer2(String host) throws RemoteException;
     public void newGame() throws RemoteException;
 }
