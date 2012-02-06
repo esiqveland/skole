@@ -1,0 +1,23 @@
+digraph G {
+	rankdir=LR // direction, Left-to-Right
+	size="7.5,10"
+	start [shape=plaintext] // no shape for this node, just text
+	start -> S0 
+	S0 -> S1 [label="[0-9]"]
+	S1 -> S4 [label="(e|E)"]
+	S0 -> S2 [label="."]
+	S1 -> S1 [label="{[0-9]}*"]
+	S1 -> S2 [label="."]
+	S2 -> S3 [label="[0-9]"]
+	S3 -> S3 [label="{[0-9]}*"]
+	S3 -> S4 [label="(e|E)"]
+	S3 -> S6 [label="epsilon"]
+	S4 -> S5 [label="-"]
+	S4 -> S6 [label="[0-9]"]
+	S5 -> S6 [label="[0-9]"]
+	S6 -> S6 [label="{[0-9]}*"]
+	S6 -> S7 [label="(f|F|l|L)"]
+	S6 [peripheries=2]
+	S7 [peripheries=2]
+	
+}
