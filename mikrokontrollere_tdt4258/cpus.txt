@@ -1,0 +1,50 @@
+- von neumann
+ - memory holds data and instructions
+- harvard
+
+µarchitecture
+- ALU
+ - pipelining
+- (data)registers
+
+ARM
+ - 3 stage pipeline
+  - fetch
+  - decode
+  - execute
+ - 32 bit alu
+ - high speed multiploier
+  - dsp instructions
+ - barrel shifter
+ - register bank
+
+
+programming model
+ - 
+
+assembly
+ - one-to-one with instructions
+ - basics:
+  - one instruction per line
+ - instruction types
+  - alu
+  - memory io
+  - flow control (branching, condition)
+
+
+
+memory systems and mechanisms
+ - caching
+  - different delays for different memory accesses
+   - non-deterministic behaviour
+
+ virtuelt minne og cache og segmentering ikke nøye for hver spesifikke cpu,
+ men bare som generelt konsept!
+
+cpu performance
+ - cycle time
+ - pipelining
+  - 
+ - memory access time
+
+ 
