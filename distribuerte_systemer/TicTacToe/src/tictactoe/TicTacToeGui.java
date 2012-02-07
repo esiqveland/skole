@@ -6,8 +6,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -103,8 +101,6 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 				quit();
 			}
 		});
-                
-                println("Waiting for other player...");
 
 		// Place and show the window:
 		setTitle("Tic Tac Toe: " + name);
@@ -260,7 +256,6 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
     }
         public void setActionObject(Action o) {
             remoteobj = o;
-            println("Player found!");
             //try {
             //    this.board = remoteobj.getBoard();
             //    repaint();
@@ -287,11 +282,6 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 		// This method must be modified!
 		if(JOptionPane.showConfirmDialog(this, "Are you sure you want to start a new game?", "Start over?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			clearBoard();
-                        try {
-                            remoteobj.newGame();
-                        } catch (RemoteException ex) {
-                            ex.printStackTrace();
-                        }
                         isDone = false;
 		}
 	}
@@ -303,6 +293,7 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 	 * Removes all marks from the board.
 	 */
 	public void clearBoard() {
+		charTurn = 'O';
                 for(int row = 0; row < board.length; row++)
 			for(int col = 0; col < board[row].length; col++)
 				board[row][col].setMark(' ');
@@ -335,16 +326,6 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 	public void print(String s) {
 		display.append(s);
 	}
-
-    public String findHost() {
-        return JOptionPane.showInputDialog("Enter IP of host or nothing to be the host: ");
-        
-    }
-
-    void setPlayer(String player2, char c) {
-        this.myMark = c;
-        this.myName = player2;
-    }
 
 	/**
 	 * Starts up a GUI without an associated player, in order
