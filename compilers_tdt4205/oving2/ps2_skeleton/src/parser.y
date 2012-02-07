@@ -37,7 +37,8 @@ int yylex ( void );                 /* Defined in the generated scanner */
 
 /* Tokens for all the key words in VSL */
 %token NUMBER STRING IDENTIFIER ASSIGN FUNC PRINT RETURN CONTINUE
-%token IF THEN ELSE FI WHILE DO DONE VAR
+%token PLUS MINUS MUL DIV POWER ASSIGNMENT
+%token IF THEN ELSE FI WHILE DO DONE VAR COMMENT
 
 
 /*
@@ -49,8 +50,10 @@ int yylex ( void );                 /* Defined in the generated scanner */
  * needs a ref. name and explicit setting of precedence in its grammar
  * production.
  */
-%left '+' '-'
-%left '*' '/'
+/*%left '+' '-'
+%left '*' '/' */
+%left PLUS MINUS
+%left MULT DIV
 %nonassoc UMINUS
 
 
@@ -69,7 +72,12 @@ int yylex ( void );                 /* Defined in the generated scanner */
 %%
 program: '+' {
     node_init ( root = malloc(sizeof(node_t)), program_n, NULL, 1, $1);
+    
 };
+expr: 
+    expr = expr PLUS expr 
+          | expr MINUS expr
+          | 
 %%
 
 
@@ -85,3 +93,5 @@ yyerror ( const char *error )
     fprintf ( stderr, "\tError: %s detected at line %d\n", error, yylineno );
     exit ( EXIT_FAILURE );
 }
+
+

@@ -2,8 +2,7 @@
 
 
 #ifdef DUMP_TREES
-void
-node_print ( FILE *output, node_t *root, uint32_t nesting )
+void node_print ( FILE *output, node_t *root, uint32_t nesting )
 {
     if ( root != NULL )
     {
@@ -27,19 +26,21 @@ node_print ( FILE *output, node_t *root, uint32_t nesting )
 #endif
 
 
-void
-node_init ( node_t *nd, nodetype_t type, void *data, uint32_t n_children, ... )
+void node_init ( node_t *nd, nodetype_t type, void *data, uint32_t n_children, ... )
 {
+
 }
 
 
-void
-node_finalize ( node_t *discard )
+void node_finalize ( node_t *discard )
 {
+
 }
 
 
-void
-destroy_subtree ( node_t *discard )
+void destroy_subtree ( node_t *discard )
 {
+
 }
+
+
