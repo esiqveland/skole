@@ -112,6 +112,7 @@ public class TicTacToe extends UnicastRemoteObject implements Action, Constants 
         try {
             remotestubretainer = (Action)Naming.lookup("//localhost/TTTClient");
             this.setRemoteObj(remotestubretainer);
+            gui.println("Found player2!");
 
         } catch (NotBoundException ex) {
             
@@ -123,6 +124,6 @@ public class TicTacToe extends UnicastRemoteObject implements Action, Constants 
     }
     
     public void newGame() throws RemoteException {
-        gui.newGame();
+        gui.clearBoard();
     }
 }

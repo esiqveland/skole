@@ -101,6 +101,7 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 				quit();
 			}
 		});
+                println("Waiting for other player...");
 
 		// Place and show the window:
 		setTitle("Tic Tac Toe: " + name);
@@ -256,6 +257,8 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
     }
         public void setActionObject(Action o) {
             remoteobj = o;
+            println("Player found!");
+
             //try {
             //    this.board = remoteobj.getBoard();
             //    repaint();
@@ -283,6 +286,12 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 		if(JOptionPane.showConfirmDialog(this, "Are you sure you want to start a new game?", "Start over?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			clearBoard();
                         isDone = false;
+                        try {
+                            remoteobj.newGame();
+                        } catch (RemoteException ex) {
+                            ex.printStackTrace();
+                        }
+
 		}
 	}
 
@@ -294,6 +303,7 @@ public class TicTacToeGui extends JFrame implements Constants, ActionListener {
 	 */
 	public void clearBoard() {
 		charTurn = 'O';
+                isDone = false;
                 for(int row = 0; row < board.length; row++)
 			for(int col = 0; col < board[row].length; col++)
 				board[row][col].setMark(' ');
