@@ -47,15 +47,23 @@
      PRINT = 263,
      RETURN = 264,
      CONTINUE = 265,
-     IF = 266,
-     THEN = 267,
-     ELSE = 268,
-     FI = 269,
-     WHILE = 270,
-     DO = 271,
-     DONE = 272,
-     VAR = 273,
-     UMINUS = 274
+     PLUS = 266,
+     MINUS = 267,
+     MUL = 268,
+     DIV = 269,
+     POWER = 270,
+     ASSIGNMENT = 271,
+     IF = 272,
+     THEN = 273,
+     ELSE = 274,
+     FI = 275,
+     WHILE = 276,
+     DO = 277,
+     DONE = 278,
+     VAR = 279,
+     COMMENT = 280,
+     MULT = 281,
+     UMINUS = 282
    };
 #endif
 /* Tokens.  */
@@ -67,15 +75,23 @@
 #define PRINT 263
 #define RETURN 264
 #define CONTINUE 265
-#define IF 266
-#define THEN 267
-#define ELSE 268
-#define FI 269
-#define WHILE 270
-#define DO 271
-#define DONE 272
-#define VAR 273
-#define UMINUS 274
+#define PLUS 266
+#define MINUS 267
+#define MUL 268
+#define DIV 269
+#define POWER 270
+#define ASSIGNMENT 271
+#define IF 272
+#define THEN 273
+#define ELSE 274
+#define FI 275
+#define WHILE 276
+#define DO 277
+#define DONE 278
+#define VAR 279
+#define COMMENT 280
+#define MULT 281
+#define UMINUS 282
 
 
 
