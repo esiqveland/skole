@@ -43,9 +43,10 @@ underscore _
 {letter}({letter}|{underscore}|{digit})* { return IDENTIFIER; }
 "(\")[^\^]*(\")"  { return STRING; }
 \/\/+[^\n]*	 { return COMMENT; }
-[ \t\n]		 { /* skip whitespace */ }
+[ \t\n]		/* Whitespace catch */
 .           	 { RETURN( yytext[0] ); } 
 %%
 
 // "\"[a-zA-z]*\""  { return STRING; }
 // [^\^] denotes every char except newline and carot 
+

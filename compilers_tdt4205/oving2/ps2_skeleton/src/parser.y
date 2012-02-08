@@ -50,9 +50,10 @@ int yylex ( void );                 /* Defined in the generated scanner */
  * needs a ref. name and explicit setting of precedence in its grammar
  * production.
  */
-/*%left '+' '-'
-%left '*' '/' */
+
+%left '+' '-'
 %left PLUS MINUS
+%left '*' '/'
 %left MULT DIV
 %nonassoc UMINUS
 
@@ -70,14 +71,18 @@ int yylex ( void );                 /* Defined in the generated scanner */
  */ 
 
 %%
+/*
 program: '+' {
     node_init ( root = malloc(sizeof(node_t)), program_n, NULL, 1, $1);
     
-};
-expr: 
-    expr = expr PLUS expr 
-          | expr MINUS expr
-          | 
+};*/
+program: expr { printf("Answer is %d\n", $1); };
+
+expr: expr PLUS expr { $$ = $1 + $3; }
+    | expr MINUS expr { $$ = $1 - $3; }
+    | expr MULT expr { $$ = $1 * $3; }  
+    | expr DIV expr { $$ = $1 / $3; }
+    | NUMBER { $$ = $1; };
 %%
 
 
