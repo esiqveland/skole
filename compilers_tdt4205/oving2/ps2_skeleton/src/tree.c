@@ -28,18 +28,44 @@ void node_print ( FILE *output, node_t *root, uint32_t nesting )
 
 void node_init ( node_t *nd, nodetype_t type, void *data, uint32_t n_children, ... )
 {
+	// this is dog...
+	va_list args;
+
+	nd = malloc( sizeof(node_t)+n_children*sizeof(node_t*) );
+	nd->type = type;
+	nd->data = data;
+	nd->n_children = n_children;
+	
+	// assign all the children from an array...
+	va_start(args, n_children); // initialize args to store all argument after the argument nargs
+	for (int i = 0; i < n_children; i++)
+		nd->children[i] = va_arg(args, node_t*);
+	  arr->arr[arr->size++] = va_arg(args, int); // Get an int from the argument list, and put it into the array
+	va_end(args); //clean up
 
 }
 
 
 void node_finalize ( node_t *discard )
 {
+	destroy_subtree( discard );
+	free( discard->children );
+	free( discard->data );
+	free( discard->entry );
+	//free( discard->n_children ); // not sure if... is not a pointer...
+	//free( discard ); // maybe not do this here, but let caller do it?
 
 }
 
 
 void destroy_subtree ( node_t *discard )
 {
+
+	// this is dog...
+	for(int i = 0; i < discard->n_children; i++) {
+		node_finalize( discard->children[i] );
+		free( discard->children[i] ); 	
+	}
 
 }
 

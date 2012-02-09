@@ -39,3 +39,4 @@ const nodetype_t
     variable_n    = { .index=VARIABLE,    .text="VARIABLE" },
     integer_n     = { .index=INTEGER,     .text="INTEGER" },
     text_n        = { .index=TEXT,        .text="TEXT" };
+
