@@ -50,30 +50,43 @@ loop:   /* evig løkke */
 /*	st.w r0[AVR32_PIO_SODR], r8 /* set output to 1 */
 /*	st.w r0[AVR32_PIO_CODR], r8 /* set output off */ 
 	ld.w r7, r1[AVR32_PIO_PDSR]
-	mov r4, 0xFF
-	and r7, r4
-	sub r7, 0b11111110 
-	breq move_led 
-/*	st.w r0[AVR32_PIO_SODR], r9 /* set output to 1 */
-/*	st.w r0[AVR32_PIO_CODR], r9 /* set output off */
+	mov r4, 0b00000001 
+	and r9, r4, r7	/* remove every other button bit */
+	breq move_led_right
+	mov r4, 0b00000100
+	and r9, r4, r7	/* remove every other button bit */
+	breq move_led_left
+/*	sub r7, 0b11111110  */
 	
 /*	lddpc r0[AVR32_PIO_PDSR] */
         rjmp loop
-move_led:
+
+move_led_right:
+	lsr r8, 1
+	breq set_shifter_end
+	rjmp update_leds
+
+move_led_left:
 	lsl r8, 1
 	mov r5, 0x100
 	sub r5, r8
-	breq set_shifter
+	breq set_shifter_start
+	rjmp update_leds
+
 update_leds:
 	mov r2, 0b11111111
-	st.w r0[AVR32_PIO_CODR], r2
-	st.w r0[AVR32_PIO_SODR], r8
+	st.w r0[AVR32_PIO_CODR], r2 /* turn off all leds */
+	st.w r0[AVR32_PIO_SODR], r8 /* turn on leds for bitmask */
 	mov r6, 200000
 	rjmp intr_sleep_start
 	rjmp loop
 
-set_shifter:
+set_shifter_start:
 	mov r8, 1
+	rjmp update_leds
+
+set_shifter_end:
+	mov r8, 0b10000000
 	rjmp update_leds
 
 intr_sleep_start:
