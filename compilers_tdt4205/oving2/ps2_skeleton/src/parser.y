@@ -36,7 +36,7 @@ int yylex ( void );                 /* Defined in the generated scanner */
 
 
 /* Tokens for all the key words in VSL */
-%token NUMBER STRING IDENTIFIER ASSIGN FUNC PRINT RETURN CONTINUE
+%token NUMBER STRING IDENTIFIER FUNC PRINT RETURN CONTINUE EPSILON
 %token PLUS MINUS MUL DIV POWER ASSIGNMENT
 %token IF THEN ELSE FI WHILE DO DONE VAR COMMENT
 
@@ -51,9 +51,9 @@ int yylex ( void );                 /* Defined in the generated scanner */
  * production.
  */
 
-%left '+' '-'
+// %left '+' '-'
 %left PLUS MINUS
-%left '*' '/'
+//%left '*' '/'
 %left MULT DIV
 %nonassoc UMINUS
 
@@ -70,19 +70,95 @@ int yylex ( void );                 /* Defined in the generated scanner */
  * later debugging.
  */ 
 
-%%
+
 /*
 program: '+' {
     node_init ( root = malloc(sizeof(node_t)), program_n, NULL, 1, $1);
     
-};*/
 program: expr { printf("Answer is %d\n", $1); };
+};*/
 
-expr: expr PLUS expr { $$ = $1 + $3; }
-    | expr MINUS expr { $$ = $1 - $3; }
-    | expr MULT expr { $$ = $1 * $3; }  
-    | expr DIV expr { $$ = $1 / $3; }
-    | NUMBER { $$ = $1; };
+%%
+program: function_list
+
+function_list: function 
+	     | function_list function
+
+statement_list: statement 
+	      | statement_list statement
+
+print_list: print_item 
+	  | print_list ", " print_item
+
+expression_list: expression 
+	       | expression_list ", " expression
+
+variable_list: variable
+	     | indexed_variable 
+	     | variable_list ", " variable
+  	     | variable_list ", " indexed_variable
+
+argument_list: expression_list
+	     | EPSILON
+
+parameter_list: variable_list
+	      | EPSILON
+
+declaration_list: declaration_list declaration 
+		| EPSILON
+
+function: FUNC variable "(" parameter_list ")" statement
+
+statement: assignment_statement 
+	 | return_statement 
+	 | print_statement 
+	 | null_statement 
+	 | if_statement 
+	 | while_statement 
+	 | block
+
+block: "{" declaration_list statement_list "}"
+
+assignment_statement: variable ASSIGNMENT expression
+		    | variable "[" expression "]" ASSIGNMENT expression
+
+return_statement: RETURN expression
+
+print_statement: PRINT print_list
+
+null_statement: CONTINUE
+
+if_statement: IF expression THEN statement FI
+	    | IF expression THEN statement ELSE statement FI
+
+while_statement: WHILE expression DO statement DONE
+
+
+expression: expression PLUS expression { $$ = $1 + $3; }
+    | expression MINUS expression { $$ = $1 - $3; }
+    | expression MULT expression { $$ = $1 * $3; }  
+    | expression DIV expression { $$ = $1 / $3; }
+    | MINUS expression
+    | expression POWER expression
+    | "(" expression ")"
+    | integer
+    | variable
+    | variable "(" argument_list ")" 
+    | variable "[" expression "]"
+
+declaration: VAR variable_list
+
+variable: IDENTIFIER
+
+indexed_variable: variable "[" integer "]"
+
+integer: NUMBER
+
+print_item: expression
+	  | text
+
+text: STRING
+
 %%
 
 
