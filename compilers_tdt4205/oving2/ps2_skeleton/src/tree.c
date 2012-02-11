@@ -54,19 +54,16 @@ void node_finalize ( node_t *discard )
 	free( discard->entry );
 	//free( discard->n_children ); // not sure if... is not a pointer...
 	//free( discard ); // maybe not do this here, but let caller do it?
-
 }
 
 
 void destroy_subtree ( node_t *discard )
 {
-
 	// this is dog...
 	for(int i = 0; i < discard->n_children; i++) {
 		node_finalize( discard->children[i] );
 		free( discard->children[i] ); 	
 	}
-
 }
 
 

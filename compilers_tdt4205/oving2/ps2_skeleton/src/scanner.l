@@ -41,7 +41,7 @@ underscore _
 "DONE"		 { return DONE; }
 "VAR"		 { return VAR; }
 {letter}({letter}|{underscore}|{digit})* { return IDENTIFIER; }
-"(\")[^\^]*(\")"  { return STRING; }
+"(\")[^\^]*(\")" { return STRING; }
 \/\/+[^\n]*	 { return COMMENT; }
 [ \t\n]		/* Whitespace catch */
 .           	 { RETURN( yytext[0] ); } 

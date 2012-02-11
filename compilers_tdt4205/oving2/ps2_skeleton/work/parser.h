@@ -42,11 +42,11 @@
      NUMBER = 258,
      STRING = 259,
      IDENTIFIER = 260,
-     ASSIGN = 261,
-     FUNC = 262,
-     PRINT = 263,
-     RETURN = 264,
-     CONTINUE = 265,
+     FUNC = 261,
+     PRINT = 262,
+     RETURN = 263,
+     CONTINUE = 264,
+     EPSILON = 265,
      PLUS = 266,
      MINUS = 267,
      MUL = 268,
@@ -70,11 +70,11 @@
 #define NUMBER 258
 #define STRING 259
 #define IDENTIFIER 260
-#define ASSIGN 261
-#define FUNC 262
-#define PRINT 263
-#define RETURN 264
-#define CONTINUE 265
+#define FUNC 261
+#define PRINT 262
+#define RETURN 263
+#define CONTINUE 264
+#define EPSILON 265
 #define PLUS 266
 #define MINUS 267
 #define MUL 268

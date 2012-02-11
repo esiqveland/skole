@@ -75,11 +75,12 @@ int yylex ( void );                 /* Defined in the generated scanner */
 program: '+' {
     node_init ( root = malloc(sizeof(node_t)), program_n, NULL, 1, $1);
     
+};
 program: expr { printf("Answer is %d\n", $1); };
-};*/
+*/
 
 %%
-program: function_list
+program: function_list { node_init ( root = malloc(sizeof(node_t)), program_n, NULL, 1, $1); };
 
 function_list: function 
 	     | function_list function
@@ -134,10 +135,10 @@ if_statement: IF expression THEN statement FI
 while_statement: WHILE expression DO statement DONE
 
 
-expression: expression PLUS expression { $$ = $1 + $3; }
-    | expression MINUS expression { $$ = $1 - $3; }
-    | expression MULT expression { $$ = $1 * $3; }  
-    | expression DIV expression { $$ = $1 / $3; }
+expression: expression PLUS expression { $$->data = $1 + $3; }
+    | expression MINUS expression { $$->data = $1 - $3; }
+    | expression MULT expression { $$->data = $1 * $3; }  
+    | expression DIV expression { $$->data = $1 / $3; }
     | MINUS expression
     | expression POWER expression
     | "(" expression ")"
@@ -152,7 +153,7 @@ variable: IDENTIFIER
 
 indexed_variable: variable "[" integer "]"
 
-integer: NUMBER
+integer: NUMBER { $$ = $1 }
 
 print_item: expression
 	  | text
