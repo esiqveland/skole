@@ -26,9 +26,9 @@ underscore _
 {digit}+    	 { yylval=atoi(yytext);  RETURN(NUMBER); }
 "+"	    	 { RETURN(PLUS); }
 "-"	    	 { RETURN(MINUS); }
-"*"         	 { RETURN(MUL); }
 "/"	    	 { RETURN(DIV); }
-"**"	    	 { RETURN(POWER); }
+\*\*	    	 { RETURN(POWER); }
+"*"         	 { RETURN(MUL); }
 ":="		 { RETURN(ASSIGNMENT); }
 "FUNC"		 { RETURN(FUNC); }
 "PRINT"		 { RETURN(PRINT); }
@@ -52,4 +52,4 @@ underscore _
 //\"(\\\"|[^\"\n])*\" { RETURN(STRING); }
 // "\"[a-zA-z]*\""  { return STRING; }
 // [^\^] denotes every char except newline and carot 
-
+// \\ --> \  \" --> " \\\" --> \" | 
