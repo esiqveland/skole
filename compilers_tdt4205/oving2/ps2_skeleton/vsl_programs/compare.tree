@@ -11,9 +11,14 @@
        VARIABLE_LIST
         VARIABLE_LIST
          VARIABLE_LIST
-          VARIABLE("a")
-         VARIABLE("_a1")
-        VARIABLE("a_2")
+          VARIABLE_LIST
+           VARIABLE_LIST
+            VARIABLE("a")
+           VARIABLE("_a1")
+          VARIABLE("a_2")
+         VARIABLE("arr")
+          INTEGER(10)
+        VARIABLE("i")
      STATEMENT_LIST
       STATEMENT_LIST
        STATEMENT_LIST
@@ -32,31 +37,91 @@
                     STATEMENT_LIST
                      STATEMENT_LIST
                       STATEMENT_LIST
+                       STATEMENT_LIST
+                        STATEMENT_LIST
+                         STATEMENT_LIST
+                          STATEMENT_LIST
+                           STATEMENT
+                            PRINT_STATEMENT
+                             PRINT_LIST
+                              PRINT_ITEM
+                               TEXT
+                          STATEMENT
+                           PRINT_STATEMENT
+                            PRINT_LIST
+                             PRINT_ITEM
+                              TEXT
+                         STATEMENT
+                          PRINT_STATEMENT
+                           PRINT_LIST
+                            PRINT_ITEM
+                             TEXT
+                        STATEMENT
+                         ASSIGNMENT_STATEMENT
+                          VARIABLE("_a1")
+                          EXPRESSION(nil)
+                           INTEGER(10)
                        STATEMENT
-                        PRINT_STATEMENT
-                         PRINT_LIST
-                          PRINT_ITEM
-                           TEXT
+                        ASSIGNMENT_STATEMENT
+                         VARIABLE("a_2")
+                         EXPRESSION(nil)
+                          INTEGER(2)
                       STATEMENT
-                       PRINT_STATEMENT
-                        PRINT_LIST
-                         PRINT_ITEM
-                          TEXT
+                       ASSIGNMENT_STATEMENT
+                        VARIABLE("a")
+                        EXPRESSION("+")
+                         EXPRESSION(nil)
+                          VARIABLE("_a1")
+                         EXPRESSION(nil)
+                          VARIABLE("a_2")
                      STATEMENT
                       PRINT_STATEMENT
                        PRINT_LIST
+                        PRINT_LIST
+                         PRINT_LIST
+                          PRINT_LIST
+                           PRINT_LIST
+                            PRINT_ITEM
+                             EXPRESSION(nil)
+                              VARIABLE("_a1")
+                           PRINT_ITEM
+                            TEXT
+                          PRINT_ITEM
+                           EXPRESSION(nil)
+                            VARIABLE("a_2")
+                         PRINT_ITEM
+                          TEXT
                         PRINT_ITEM
-                         TEXT
+                         EXPRESSION(nil)
+                          VARIABLE("a")
                     STATEMENT
                      ASSIGNMENT_STATEMENT
-                      VARIABLE("_a1")
-                      EXPRESSION(nil)
-                       INTEGER(10)
+                      VARIABLE("a")
+                      EXPRESSION("-")
+                       EXPRESSION(nil)
+                        VARIABLE("_a1")
+                       EXPRESSION(nil)
+                        VARIABLE("a_2")
                    STATEMENT
-                    ASSIGNMENT_STATEMENT
-                     VARIABLE("a_2")
-                     EXPRESSION(nil)
-                      INTEGER(2)
+                    PRINT_STATEMENT
+                     PRINT_LIST
+                      PRINT_LIST
+                       PRINT_LIST
+                        PRINT_LIST
+                         PRINT_LIST
+                          PRINT_ITEM
+                           EXPRESSION(nil)
+                            VARIABLE("_a1")
+                         PRINT_ITEM
+                          TEXT
+                        PRINT_ITEM
+                         EXPRESSION(nil)
+                          VARIABLE("a_2")
+                       PRINT_ITEM
+                        TEXT
+                      PRINT_ITEM
+                       EXPRESSION(nil)
+                        VARIABLE("a")
                   STATEMENT
                    ASSIGNMENT_STATEMENT
                     VARIABLE("a")
@@ -64,7 +129,9 @@
                      EXPRESSION(nil)
                       VARIABLE("_a1")
                      EXPRESSION(nil)
-                      VARIABLE("a_2")
+                      EXPRESSION("-")
+                       EXPRESSION(nil)
+                        VARIABLE("a_2")
                  STATEMENT
                   PRINT_STATEMENT
                    PRINT_LIST
@@ -88,7 +155,7 @@
                 STATEMENT
                  ASSIGNMENT_STATEMENT
                   VARIABLE("a")
-                  EXPRESSION("-")
+                  EXPRESSION("*")
                    EXPRESSION(nil)
                     VARIABLE("_a1")
                    EXPRESSION(nil)
@@ -116,13 +183,11 @@
               STATEMENT
                ASSIGNMENT_STATEMENT
                 VARIABLE("a")
-                EXPRESSION("+")
+                EXPRESSION("/")
                  EXPRESSION(nil)
                   VARIABLE("_a1")
                  EXPRESSION(nil)
-                  EXPRESSION("-")
-                   EXPRESSION(nil)
-                    VARIABLE("a_2")
+                  VARIABLE("a_2")
              STATEMENT
               PRINT_STATEMENT
                PRINT_LIST
@@ -144,72 +209,87 @@
                  EXPRESSION(nil)
                   VARIABLE("a")
             STATEMENT
-             ASSIGNMENT_STATEMENT
-              VARIABLE("a")
-              EXPRESSION("*")
+             IF_STATEMENT
+              EXPRESSION(nil)
                EXPRESSION(nil)
-                VARIABLE("_a1")
-               EXPRESSION(nil)
-                VARIABLE("a_2")
+                VARIABLE("a")
+              STATEMENT
+               PRINT_STATEMENT
+                PRINT_LIST
+                 PRINT_ITEM
+                  EXPRESSION(nil)
+                   VARIABLE("a")
            STATEMENT
-            PRINT_STATEMENT
-             PRINT_LIST
-              PRINT_LIST
+            ASSIGNMENT_STATEMENT
+             VARIABLE("i")
+             EXPRESSION(nil)
+              INTEGER(10)
+          STATEMENT
+           WHILE_STATEMENT
+            EXPRESSION(nil)
+             EXPRESSION(nil)
+              VARIABLE("i")
+            STATEMENT
+             BLOCK
+              (nil)
+              STATEMENT_LIST
+               STATEMENT_LIST
+                STATEMENT
+                 ASSIGNMENT_STATEMENT
+                  VARIABLE("i")
+                  EXPRESSION("-")
+                   EXPRESSION(nil)
+                    VARIABLE("i")
+                   EXPRESSION(nil)
+                    INTEGER(1)
+               STATEMENT
+                ASSIGNMENT_STATEMENT
+                 VARIABLE("arr")
+                 EXPRESSION(nil)
+                  VARIABLE("i")
+                 EXPRESSION("^")
+                  EXPRESSION(nil)
+                   VARIABLE("i")
+                  EXPRESSION(nil)
+                   INTEGER(2)
+         STATEMENT
+          ASSIGNMENT_STATEMENT
+           VARIABLE("i")
+           EXPRESSION(nil)
+            INTEGER(10)
+        STATEMENT
+         WHILE_STATEMENT
+          EXPRESSION(nil)
+           EXPRESSION(nil)
+            VARIABLE("i")
+          STATEMENT
+           BLOCK
+            (nil)
+            STATEMENT_LIST
+             STATEMENT_LIST
+              STATEMENT
+               ASSIGNMENT_STATEMENT
+                VARIABLE("i")
+                EXPRESSION("-")
+                 EXPRESSION(nil)
+                  VARIABLE("i")
+                 EXPRESSION(nil)
+                  INTEGER(1)
+             STATEMENT
+              PRINT_STATEMENT
                PRINT_LIST
                 PRINT_LIST
                  PRINT_LIST
                   PRINT_ITEM
                    EXPRESSION(nil)
-                    VARIABLE("_a1")
+                    VARIABLE("i")
                  PRINT_ITEM
                   TEXT
                 PRINT_ITEM
-                 EXPRESSION(nil)
-                  VARIABLE("a_2")
-               PRINT_ITEM
-                TEXT
-              PRINT_ITEM
-               EXPRESSION(nil)
-                VARIABLE("a")
-          STATEMENT
-           ASSIGNMENT_STATEMENT
-            VARIABLE("a")
-            EXPRESSION("/")
-             EXPRESSION(nil)
-              VARIABLE("_a1")
-             EXPRESSION(nil)
-              VARIABLE("a_2")
-         STATEMENT
-          PRINT_STATEMENT
-           PRINT_LIST
-            PRINT_LIST
-             PRINT_LIST
-              PRINT_LIST
-               PRINT_LIST
-                PRINT_ITEM
-                 EXPRESSION(nil)
-                  VARIABLE("_a1")
-               PRINT_ITEM
-                TEXT
-              PRINT_ITEM
-               EXPRESSION(nil)
-                VARIABLE("a_2")
-             PRINT_ITEM
-              TEXT
-            PRINT_ITEM
-             EXPRESSION(nil)
-              VARIABLE("a")
-        STATEMENT
-         IF_STATEMENT
-          EXPRESSION(nil)
-           EXPRESSION(nil)
-            VARIABLE("a")
-          STATEMENT
-           PRINT_STATEMENT
-            PRINT_LIST
-             PRINT_ITEM
-              EXPRESSION(nil)
-               VARIABLE("a")
+                 EXPRESSION("A")
+                  VARIABLE("arr")
+                  EXPRESSION(nil)
+                   VARIABLE("i")
        STATEMENT
         WHILE_STATEMENT
          EXPRESSION(nil)
@@ -267,3 +347,4 @@
        RETURN_STATEMENT
         EXPRESSION(nil)
          INTEGER(0)
+

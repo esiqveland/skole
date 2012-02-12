@@ -20,8 +20,10 @@ void node_print ( FILE *output, node_t *root, uint32_t nesting )
         for ( int32_t i=0; i<root->n_children; i++ )
             node_print ( output, root->children[i], nesting+1 );
     }
-    else
+    else {
+	//fprintf ( stderr, "root was null");
         fprintf ( output, "%*c%p\n", nesting, ' ', root );
+    }
 }
 #endif
 
@@ -31,16 +33,15 @@ void node_init ( node_t *nd, nodetype_t type, void *data, uint32_t n_children, .
 	// this is dog...
 	va_list args;
 
-	nd = malloc( sizeof(node_t)+n_children*sizeof(node_t*) );
+	//nd = malloc( sizeof(node_t) );
 	nd->type = type;
 	nd->data = data;
 	nd->n_children = n_children;
-	
+	nd->children = malloc( sizeof(node_t*) * n_children );
 	// assign all the children from an array...
 	va_start(args, n_children); // initialize args to store all argument after the argument nargs
 	for (int i = 0; i < n_children; i++)
 		nd->children[i] = va_arg(args, node_t*);
-	  arr->arr[arr->size++] = va_arg(args, int); // Get an int from the argument list, and put it into the array
 	va_end(args); //clean up
 
 }

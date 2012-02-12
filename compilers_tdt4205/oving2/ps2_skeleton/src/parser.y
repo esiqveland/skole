@@ -54,7 +54,8 @@ int yylex ( void );                 /* Defined in the generated scanner */
 // %left '+' '-'
 %left PLUS MINUS
 //%left '*' '/'
-%left MULT DIV
+%left MUL DIV
+%right POWER
 %nonassoc UMINUS
 
 
@@ -80,85 +81,110 @@ program: expr { printf("Answer is %d\n", $1); };
 */
 
 %%
-program: function_list { node_init ( root = malloc(sizeof(node_t)), program_n, NULL, 1, $1); };
+program: function_list { node_init ( root = malloc(sizeof(node_t)), program_n, NULL, 1, $1); }
+       ;
 
-function_list: function 
-	     | function_list function
+function_list: function { node_init ( $$ = malloc(sizeof(node_t)), function_list_n, NULL, 1, $1); }
+	     | function_list function { node_init ( $$ = malloc(sizeof(node_t)), function_list_n, NULL, 2, $1, $2); }
+             ;
 
-statement_list: statement 
-	      | statement_list statement
-
-print_list: print_item 
-	  | print_list ", " print_item
-
-expression_list: expression 
-	       | expression_list ", " expression
-
-variable_list: variable
-	     | indexed_variable 
-	     | variable_list ", " variable
-  	     | variable_list ", " indexed_variable
-
-argument_list: expression_list
-	     | EPSILON
-
-parameter_list: variable_list
-	      | EPSILON
-
-declaration_list: declaration_list declaration 
-		| EPSILON
-
-function: FUNC variable "(" parameter_list ")" statement
-
-statement: assignment_statement 
-	 | return_statement 
-	 | print_statement 
-	 | null_statement 
-	 | if_statement 
-	 | while_statement 
-	 | block
-
-block: "{" declaration_list statement_list "}"
-
-assignment_statement: variable ASSIGNMENT expression
-		    | variable "[" expression "]" ASSIGNMENT expression
-
-return_statement: RETURN expression
-
-print_statement: PRINT print_list
-
-null_statement: CONTINUE
-
-if_statement: IF expression THEN statement FI
-	    | IF expression THEN statement ELSE statement FI
-
-while_statement: WHILE expression DO statement DONE
+statement_list: statement { node_init ( $$ = malloc(sizeof(node_t)), statement_list_n, NULL, 1, $1); }
+	      | statement_list statement { node_init ( $$ = malloc(sizeof(node_t)), statement_list_n, NULL, 2, $1, $2); }
+              ;
 
 
-expression: expression PLUS expression { $$->data = $1 + $3; }
-    | expression MINUS expression { $$->data = $1 - $3; }
-    | expression MULT expression { $$->data = $1 * $3; }  
-    | expression DIV expression { $$->data = $1 / $3; }
-    | MINUS expression
-    | expression POWER expression
-    | "(" expression ")"
-    | integer
-    | variable
-    | variable "(" argument_list ")" 
-    | variable "[" expression "]"
+print_list: print_item { node_init ( $$ = malloc(sizeof(node_t)), print_list_n, NULL, 1, $1); }
+	  | print_list ',' print_item { node_init ( $$ = malloc(sizeof(node_t)), print_list_n, NULL, 2, $1, $3); }
+	  ;
 
-declaration: VAR variable_list
+expression_list: expression { node_init ( $$ = malloc(sizeof(node_t)), expression_list_n, NULL, 1, $1); }
+	       | expression_list ',' expression { node_init ( $$ = malloc(sizeof(node_t)), expression_list_n, NULL, 2, $1, $3); }
+	       ;
 
-variable: IDENTIFIER
+variable_list: variable { node_init ( $$ = malloc(sizeof(node_t)), variable_list_n, NULL, 1, $1); }
+	     | indexed_variable { node_init ( $$ = malloc(sizeof(node_t)), variable_list_n, NULL, 1, $1); }
+	     | variable_list ',' variable { node_init ( $$ = malloc(sizeof(node_t)), variable_list_n, NULL, 2, $1, $3); }
+  	     | variable_list ',' indexed_variable { node_init ( $$ = malloc(sizeof(node_t)), variable_list_n, NULL, 2, $1, $3); }
+	     ;
 
-indexed_variable: variable "[" integer "]"
+argument_list: expression_list { node_init ( $$ = malloc(sizeof(node_t)), argument_list_n, NULL, 1, $1); }
+	     | { $$ = NULL }
+	     ;
 
-integer: NUMBER { $$ = $1 }
+parameter_list: variable_list { node_init ( $$ = malloc(sizeof(node_t)), parameter_list_n, NULL, 1, $1); }
+	      | { $$ = NULL }
+	      ;
 
-print_item: expression
-	  | text
+declaration_list: declaration_list declaration { node_init ( $$ = malloc(sizeof(node_t)), declaration_list_n, NULL, 2, $1, $2); }
+		| { $$ = NULL }
+		;
 
-text: STRING
+function: FUNC variable '(' parameter_list ')' statement { node_init ( $$ = malloc(sizeof(node_t)), function_n, NULL, 3, $2, $4, $6); }
+	;
+
+statement: assignment_statement { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); } 
+	 | return_statement  { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); }
+	 | print_statement  { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); }
+	 | null_statement  { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); }
+	 | if_statement  { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); }
+	 | while_statement  { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); }
+	 | block { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); }
+	 ;
+
+block: '{' declaration_list statement_list '}' { node_init ( $$ = malloc(sizeof(node_t)), block_n, NULL, 2, $2, $3); }
+     ;
+
+assignment_statement: variable ASSIGNMENT expression { node_init ( $$ = malloc(sizeof(node_t)), assignment_statement_n, NULL, 2, $1, $3); }
+		    | variable '[' expression ']' ASSIGNMENT expression { node_init ( $$ = malloc(sizeof(node_t)), assignment_statement_n, NULL, 3, $1, $3, $5); }
+		    ;
+
+return_statement: RETURN expression { node_init ( $$ = malloc(sizeof(node_t)), return_statement_n, NULL, 1, $2); }
+		;
+
+print_statement: PRINT print_list { node_init ( $$ = malloc(sizeof(node_t)), print_statement_n, NULL, 1, $2); }
+	       ;
+
+null_statement: CONTINUE { node_init ( $$ = malloc(sizeof(node_t)), null_statement_n, NULL, 0); }
+	      ;
+
+if_statement: IF expression THEN statement FI { node_init ( $$ = malloc(sizeof(node_t)), if_statement_n, NULL, 2, $2, $4); }
+	    | IF expression THEN statement ELSE statement FI { node_init ( $$ = malloc(sizeof(node_t)), if_statement_n, NULL, 3, $2, $4, $6); }
+	    ;
+
+while_statement: WHILE expression DO statement DONE { node_init ( $$ = malloc(sizeof(node_t)), while_statement_n, NULL, 2, $2, $4); }
+	       ;
+
+expression: expression PLUS expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("+"), 2, $1, $3); }
+	  | expression MINUS expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("-"), 2, $1, $3); }
+    	  | expression MUL expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("*"), 2, $1, $3); }
+    	  | expression DIV expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("/"), 2, $1, $3); }
+    	  | MINUS expression { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("-"), 1, $2); }
+    	  | expression POWER expression { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("**"), 2, $1, $3); }
+    	  | '(' expression ')' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("PAREN"), 1, $2); }
+    	  | integer { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("NUMBER"), 1, $1); }
+    	  | variable { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("VARIABLE"), 1, $1); }
+    	  | variable '(' argument_list ')' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 2, $1, $3); } 
+    	  | variable '[' expression ']' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 2, $1, $3); }
+    	  ;
+
+declaration: VAR variable_list { node_init ( $$ = malloc(sizeof(node_t)), declaration_n, STRDUP("VARIABLE"), 1, $1); }
+	   ;
+
+variable: IDENTIFIER { node_init( $$ = malloc(sizeof(node_t)), variable_n, STRDUP(yytext), 0) }
+	;
+
+indexed_variable: variable '[' integer ']' { node_init ( $$ = malloc(sizeof(node_t)), variable_n, NULL, 2, $1, $3); }
+		;
+
+integer: NUMBER { node_init( $$ = malloc(sizeof(node_t)), integer_n, yylval, 0); }
+       ;
+
+print_item: expression { node_init( $$ = malloc(sizeof(node_t)), print_item_n, NULL, 1, $1); }
+	  | text { node_init( $$ = malloc(sizeof(node_t)), print_item_n, NULL, 1, $1); }
+	  ;
+
+text: STRING { node_init( $$ = malloc(sizeof(node_t)), text_n, STRDUP(yytext), 0); }
+    ;
 
 %%
 

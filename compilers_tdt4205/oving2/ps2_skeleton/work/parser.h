@@ -62,8 +62,7 @@
      DONE = 278,
      VAR = 279,
      COMMENT = 280,
-     MULT = 281,
-     UMINUS = 282
+     UMINUS = 281
    };
 #endif
 /* Tokens.  */
@@ -90,8 +89,7 @@
 #define DONE 278
 #define VAR 279
 #define COMMENT 280
-#define MULT 281
-#define UMINUS 282
+#define UMINUS 281
 
 
 

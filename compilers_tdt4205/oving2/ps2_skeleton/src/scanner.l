@@ -21,32 +21,35 @@ digit	[0-9]
 letter  [a-zA-Z]
 underscore _
 %%
-{digit}+    	 { yylval=atoi(yytext); return NUMBER; }
-"+"	    	 { return PLUS; }
-"-"	    	 { return MINUS; }
-"*"         	 { return MUL; }
-"/"	    	 { return DIV; }
-"**"	    	 { return POWER; }
-":="		 { return ASSIGNMENT; }
-"FUNC"		 { return FUNC; }
-"PRINT"		 { return PRINT; }
-"RETURN"	 { return RETURN; }
-"CONTINUE"	 { return CONTINUE; }
-"IF"		 { return IF; }
-"THEN"		 { return THEN; }
-"ELSE"		 { return ELSE; }
-"FI"		 { return FI; }
-"WHILE"		 { return WHILE; }
-"DO"		 { return DO; }
-"DONE"		 { return DONE; }
-"VAR"		 { return VAR; }
-{letter}({letter}|{underscore}|{digit})* { return IDENTIFIER; }
-"(\")[^\^]*(\")" { return STRING; }
-\/\/+[^\n]*	 { return COMMENT; }
-[ \t\n]		/* Whitespace catch */
+\/\/+[^\n]*	 ;/*{ RETURN(COMMENT); }*/
+[ \t\n]		/* Whitespace catch */ ;
+{digit}+    	 { yylval=atoi(yytext);  RETURN(NUMBER); }
+"+"	    	 { RETURN(PLUS); }
+"-"	    	 { RETURN(MINUS); }
+"*"         	 { RETURN(MUL); }
+"/"	    	 { RETURN(DIV); }
+"**"	    	 { RETURN(POWER); }
+":="		 { RETURN(ASSIGNMENT); }
+"FUNC"		 { RETURN(FUNC); }
+"PRINT"		 { RETURN(PRINT); }
+"RETURN"	 { RETURN(RETURN); }
+"CONTINUE"	 { RETURN(CONTINUE); }
+"IF"		 { RETURN(IF); }
+"THEN"		 { RETURN(THEN); }
+"ELSE"		 { RETURN(ELSE); }
+"FI"		 { RETURN(FI); }
+"WHILE"		 { RETURN(WHILE); }
+"DO"		 { RETURN(DO); }
+"DONE"		 { RETURN(DONE); }
+"VAR"		 { RETURN(VAR); }
+({letter}|{underscore})({letter}|{underscore}|{digit})* {  RETURN(IDENTIFIER); }
+\"(\\\"|[^\"\n])*\" { RETURN(STRING); }
 .           	 { RETURN( yytext[0] ); } 
 %%
 
+//(\")[^\^]*(\") 	 { RETURN(STRING); }
+//\".*\"		 { RETURN(STRING); }
+//\"(\\\"|[^\"\n])*\" { RETURN(STRING); }
 // "\"[a-zA-z]*\""  { return STRING; }
 // [^\^] denotes every char except newline and carot 
 

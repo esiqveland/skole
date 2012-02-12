@@ -47,8 +47,12 @@ main ( int argc, char **argv )
     yyparse();
 
 #ifdef DUMP_TREES
-    if ( (DUMP_TREES & 1) != 0 )
+    if ( (DUMP_TREES & 1) != 0 ) {
+	fprintf( stderr, "Dumping tree:\n");
+	if( root == NULL )
+		fprintf( stderr, "Root is NULL!:\n\n");
         node_print ( stderr, root, 0 );
+    }
 #endif
 
     /* Parsing and semantics are ok, redirect stdout to file (if requested) */
