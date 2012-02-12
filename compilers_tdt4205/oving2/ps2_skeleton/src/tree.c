@@ -35,7 +35,13 @@ void node_init ( node_t *nd, nodetype_t type, void *data, uint32_t n_children, .
 
 	//nd = malloc( sizeof(node_t) );
 	nd->type = type;
-	nd->data = data;
+	if(type.index == INTEGER) {
+		uint32_t* temp = malloc(sizeof(uint32_t));
+		*temp = atoi((char*)data);
+		nd->data = temp;
+	} else {
+		nd->data = data;
+	}
 	nd->n_children = n_children;
 	nd->children = malloc( sizeof(node_t*) * n_children );
 	// assign all the children from an array...

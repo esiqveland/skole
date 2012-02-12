@@ -108,15 +108,15 @@ variable_list: variable { node_init ( $$ = malloc(sizeof(node_t)), variable_list
 	     ;
 
 argument_list: expression_list { node_init ( $$ = malloc(sizeof(node_t)), argument_list_n, NULL, 1, $1); }
-	     | { $$ = NULL }
+	     | { $$ = NULL; }
 	     ;
 
 parameter_list: variable_list { node_init ( $$ = malloc(sizeof(node_t)), parameter_list_n, NULL, 1, $1); }
-	      | { $$ = NULL }
+	      | { $$ = NULL; }
 	      ;
 
 declaration_list: declaration_list declaration { node_init ( $$ = malloc(sizeof(node_t)), declaration_list_n, NULL, 2, $1, $2); }
-		| { $$ = NULL }
+		| { $$ = NULL; }
 		;
 
 function: FUNC variable '(' parameter_list ')' statement { node_init ( $$ = malloc(sizeof(node_t)), function_n, NULL, 3, $2, $4, $6); }
@@ -176,7 +176,7 @@ variable: IDENTIFIER { node_init( $$ = malloc(sizeof(node_t)), variable_n, STRDU
 indexed_variable: variable '[' integer ']' { node_init ( $$ = malloc(sizeof(node_t)), variable_n, NULL, 2, $1, $3); }
 		;
 
-integer: NUMBER { node_init( $$ = malloc(sizeof(node_t)), integer_n, yylval, 0); }
+integer: NUMBER { node_init( $$ = malloc(sizeof(node_t)), integer_n, STRDUP(yytext), 0); }
        ;
 
 print_item: expression { node_init( $$ = malloc(sizeof(node_t)), print_item_n, NULL, 1, $1); }
