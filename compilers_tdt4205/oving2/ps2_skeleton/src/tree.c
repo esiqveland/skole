@@ -33,13 +33,15 @@ void node_init ( node_t *nd, nodetype_t type, void *data, uint32_t n_children, .
 
 	//nd = malloc( sizeof(node_t) );
 	nd->type = type;
+	/* 
 	if(type.index == INTEGER) {
 		uint32_t* temp = malloc(sizeof(uint32_t));
 		*temp = atoi((char*)data);
 		nd->data = temp;
 	} else {
-		nd->data = data;
 	}
+	*/
+	nd->data = data;
 	nd->n_children = n_children;
 	nd->children = (node_t **) malloc( sizeof(node_t*) * n_children );
 	// this is dog...
@@ -63,6 +65,11 @@ void node_finalize ( node_t *discard )
 	free( discard ); // maybe not do this here, but let caller do it?
 }
 
+uint32_t* intdup( int myint ) {
+	uint32_t* i = malloc(sizeof(uint32_t));
+	*i = myint;
+	return i;
+}
 
 void destroy_subtree ( node_t *discard )
 {

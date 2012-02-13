@@ -23,13 +23,12 @@ underscore _
 %%
 \/\/+[^\n]*	 ;/*{ RETURN(COMMENT); }*/
 [ \t\n]		/* Whitespace catch */ ;
-{digit}+    	 { yylval=atoi(yytext);  RETURN(NUMBER); }
 "+"	    	 { RETURN(PLUS); }
 "-"	    	 { RETURN(MINUS); }
 "/"	    	 { RETURN(DIV); }
 \*\*	    	 { RETURN(POWER); }
 "*"         	 { RETURN(MUL); }
-":="		 { RETURN(ASSIGNMENT); }
+":="		 { RETURN(ASSIGN); }
 "FUNC"		 { RETURN(FUNC); }
 "PRINT"		 { RETURN(PRINT); }
 "RETURN"	 { RETURN(RETURN); }
@@ -42,8 +41,9 @@ underscore _
 "DO"		 { RETURN(DO); }
 "DONE"		 { RETURN(DONE); }
 "VAR"		 { RETURN(VAR); }
-({letter}|{underscore})({letter}|{underscore}|{digit})* {  RETURN(IDENTIFIER); }
-\"(\\\"|[^\"\n])*\" { RETURN(STRING); }
+{digit}+    	 { yylval=intdup(atoi(yytext));  RETURN(NUMBER); }
+({letter}|{underscore})({letter}|{underscore}|{digit})* { yylval=STRDUP(yytext); RETURN(IDENTIFIER); }
+\"(\\\"|[^\"\n])*\" { yylval=STRDUP(yytext); RETURN(STRING); }
 .           	 { RETURN( yytext[0] ); } 
 %%
 

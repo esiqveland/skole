@@ -36,9 +36,10 @@ int yylex ( void );                 /* Defined in the generated scanner */
 
 
 /* Tokens for all the key words in VSL */
-%token NUMBER STRING IDENTIFIER FUNC PRINT RETURN CONTINUE EPSILON
-%token PLUS MINUS MUL DIV POWER ASSIGNMENT
-%token IF THEN ELSE FI WHILE DO DONE VAR COMMENT
+%token NUMBER STRING IDENTIFIER ASSIGN FUNC PRINT RETURN CONTINUE
+%token IF THEN ELSE FI WHILE DO DONE VAR
+%token PLUS MINUS MUL DIV POWER 
+
 
 
 /*
@@ -118,7 +119,7 @@ declaration_list: declaration_list declaration { node_init ( $$ = malloc(sizeof(
 		| { $$ = NULL; }
 		;
 
-function: FUNC variable '(' parameter_list ')' statement { node_init ( $$ = malloc(sizeof(node_t)), function_n, NULL, 3, $2, $4, $6); }
+function: FUNC variable '(' parameter_list ')' statement { node_init ( $$ = malloc(sizeof(node_t)), function_n, STRDUP("F"), 3, $2, $4, $6); }
 	;
 
 statement: assignment_statement { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); } 
@@ -133,8 +134,8 @@ statement: assignment_statement { node_init ( $$ = malloc(sizeof(node_t)), state
 block: '{' declaration_list statement_list '}' { node_init ( $$ = malloc(sizeof(node_t)), block_n, NULL, 2, $2, $3); }
      ;
 
-assignment_statement: variable ASSIGNMENT expression { node_init ( $$ = malloc(sizeof(node_t)), assignment_statement_n, NULL, 2, $1, $3); }
-		    | variable '[' expression ']' ASSIGNMENT expression { node_init ( $$ = malloc(sizeof(node_t)), assignment_statement_n, NULL, 3, $1, $3, $5); }
+assignment_statement: variable ASSIGN expression { node_init ( $$ = malloc(sizeof(node_t)), assignment_statement_n, NULL, 2, $1, $3); }
+		    | variable '[' expression ']' ASSIGN expression { node_init ( $$ = malloc(sizeof(node_t)), assignment_statement_n, NULL, 3, $1, $3, $6); }
 		    ;
 
 return_statement: RETURN expression { node_init ( $$ = malloc(sizeof(node_t)), return_statement_n, NULL, 1, $2); }
@@ -156,33 +157,33 @@ while_statement: WHILE expression DO statement DONE { node_init ( $$ = malloc(si
 expression: expression PLUS expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("+"), 2, $1, $3); }
 	  | expression MINUS expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("-"), 2, $1, $3); }
     	  | expression MUL expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("*"), 2, $1, $3); }
-	  | expression POWER expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("^"), 2, $1, $3); }
     	  | expression DIV expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("/"), 2, $1, $3); }
+	  | expression POWER expression { node_init( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("^"), 2, $1, $3); }
     	  | MINUS expression { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("-"), 1, $2); }
     	  | '(' expression ')' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 1, $2); }
     	  | integer { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 1, $1); }
     	  | variable { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 1, $1); }
     	  | variable '(' argument_list ')' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 2, $1, $3); } 
-    	  | variable '[' expression ']' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 2, $1, $3); }
+    	  | variable '[' expression ']' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("A"), 2, $1, $3); }
     	  ;
 
 declaration: VAR variable_list { node_init ( $$ = malloc(sizeof(node_t)), declaration_n, STRDUP("VARIABLE"), 1, $2); }
 	   ;
 
-variable: IDENTIFIER { node_init( $$ = malloc(sizeof(node_t)), variable_n, STRDUP(yytext), 0) }
+variable: IDENTIFIER { node_init( $$ = malloc(sizeof(node_t)), variable_n, yylval, 0) }
 	;
 
 indexed_variable: variable '[' integer ']' { node_init ( $$ = malloc(sizeof(node_t)), variable_n, STRDUP($1->data), 1, $3); }
 		;
 
-integer: NUMBER { node_init( $$ = malloc(sizeof(node_t)), integer_n, STRDUP(yytext), 0); }
+integer: NUMBER { node_init( $$ = malloc(sizeof(node_t)), integer_n, yylval, 0); }
        ;
 
 print_item: expression { node_init( $$ = malloc(sizeof(node_t)), print_item_n, NULL, 1, $1); }
 	  | text { node_init( $$ = malloc(sizeof(node_t)), print_item_n, NULL, 1, $1); }
 	  ;
 
-text: STRING { node_init( $$ = malloc(sizeof(node_t)), text_n, STRDUP(yytext), 0); }
+text: STRING { node_init( $$ = malloc(sizeof(node_t)), text_n, yylval, 0); }
     ;
 
 %%
