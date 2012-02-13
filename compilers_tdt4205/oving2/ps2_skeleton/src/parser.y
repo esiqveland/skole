@@ -119,7 +119,7 @@ declaration_list: declaration_list declaration { node_init ( $$ = malloc(sizeof(
 		| { $$ = NULL; }
 		;
 
-function: FUNC variable '(' parameter_list ')' statement { node_init ( $$ = malloc(sizeof(node_t)), function_n, STRDUP("F"), 3, $2, $4, $6); }
+function: FUNC variable '(' parameter_list ')' statement { node_init ( $$ = malloc(sizeof(node_t)), function_n, NULL, 3, $2, $4, $6); }
 	;
 
 statement: assignment_statement { node_init ( $$ = malloc(sizeof(node_t)), statement_n, NULL, 1, $1); } 
@@ -163,7 +163,7 @@ expression: expression PLUS expression { node_init( $$ = malloc(sizeof(node_t)),
     	  | '(' expression ')' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 1, $2); }
     	  | integer { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 1, $1); }
     	  | variable { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 1, $1); }
-    	  | variable '(' argument_list ')' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, NULL, 2, $1, $3); } 
+    	  | variable '(' argument_list ')' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("F"), 2, $1, $3); } 
     	  | variable '[' expression ']' { node_init ( $$ = malloc(sizeof(node_t)), expression_n, STRDUP("A"), 2, $1, $3); }
     	  ;
 
