@@ -42,4 +42,5 @@ void node_print ( FILE *output, node_t *root, uint32_t nesting );
 void node_finalize ( node_t *discard );
 
 void destroy_subtree ( node_t *discard );
+uint32_t* intdup( int myint );
 #endif
