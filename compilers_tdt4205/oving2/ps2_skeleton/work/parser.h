@@ -42,54 +42,50 @@
      NUMBER = 258,
      STRING = 259,
      IDENTIFIER = 260,
-     FUNC = 261,
-     PRINT = 262,
-     RETURN = 263,
-     CONTINUE = 264,
-     EPSILON = 265,
-     PLUS = 266,
-     MINUS = 267,
-     MUL = 268,
-     DIV = 269,
-     POWER = 270,
-     ASSIGNMENT = 271,
-     IF = 272,
-     THEN = 273,
-     ELSE = 274,
-     FI = 275,
-     WHILE = 276,
-     DO = 277,
-     DONE = 278,
-     VAR = 279,
-     COMMENT = 280,
-     UMINUS = 281
+     ASSIGN = 261,
+     FUNC = 262,
+     PRINT = 263,
+     RETURN = 264,
+     CONTINUE = 265,
+     IF = 266,
+     THEN = 267,
+     ELSE = 268,
+     FI = 269,
+     WHILE = 270,
+     DO = 271,
+     DONE = 272,
+     VAR = 273,
+     PLUS = 274,
+     MINUS = 275,
+     MUL = 276,
+     DIV = 277,
+     POWER = 278,
+     UMINUS = 279
    };
 #endif
 /* Tokens.  */
 #define NUMBER 258
 #define STRING 259
 #define IDENTIFIER 260
-#define FUNC 261
-#define PRINT 262
-#define RETURN 263
-#define CONTINUE 264
-#define EPSILON 265
-#define PLUS 266
-#define MINUS 267
-#define MUL 268
-#define DIV 269
-#define POWER 270
-#define ASSIGNMENT 271
-#define IF 272
-#define THEN 273
-#define ELSE 274
-#define FI 275
-#define WHILE 276
-#define DO 277
-#define DONE 278
-#define VAR 279
-#define COMMENT 280
-#define UMINUS 281
+#define ASSIGN 261
+#define FUNC 262
+#define PRINT 263
+#define RETURN 264
+#define CONTINUE 265
+#define IF 266
+#define THEN 267
+#define ELSE 268
+#define FI 269
+#define WHILE 270
+#define DO 271
+#define DONE 272
+#define VAR 273
+#define PLUS 274
+#define MINUS 275
+#define MUL 276
+#define DIV 277
+#define POWER 278
+#define UMINUS 279
 
 
 
