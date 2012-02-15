@@ -37,7 +37,7 @@ void push ( position_t p )
 		parens = (position_t*)realloc(parens, sizeof(position_t)*2*size);
 		if( parens == NULL ) {
 			fprintf(stderr, "No mem left. Exiting...");
-			return;
+			exit(1);
 		} 
 		size = size + size;
 	}
@@ -118,13 +118,15 @@ int main ( int argc, char **argv )
 			printf("Unmatched close paren at line: %d char: %d\n", now.line, now.count);
 			input_ok = false;
 		}
-		/*if( ((*temp).line == balance.line) && ((*temp).count == balance.count) ) {
+		/*
+		if( ((*temp).line == balance.line) && ((*temp).count == balance.count) ) {
 			fprintf(stdout, "herpderp\n");
 		} else {
 			fprintf(stdout, "Matching paren was not correct at line: ");
 			fprintf(stdout, " char: ");
 			fprintf(stdout, "\n");
-		}*/
+		}
+		*/
 	}
         now.count += 1;
         c = getchar();
