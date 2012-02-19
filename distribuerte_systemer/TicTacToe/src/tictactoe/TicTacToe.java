@@ -58,12 +58,10 @@ public class TicTacToe extends UnicastRemoteObject implements Action, Constants 
                 Naming.rebind("//localhost/TTT", obj);
                 obj.setRemoteObj(localstubretainer);
                 System.out.println("PeerServer bound in registry");
-                
             } catch (Exception e) {
                 System.err.println("RMI server exception:" + e);
                 e.printStackTrace();
             }
-
         } catch (RemoteException e) {
             //do nothing, error means registry already exists
             System.out.println("java RMI registry already exists.");
@@ -74,11 +72,11 @@ public class TicTacToe extends UnicastRemoteObject implements Action, Constants 
                 remotestubretainer = (Action)Naming.lookup("//localhost/TTT");
                 cl.setRemoteObj(remotestubretainer);
             } catch (NotBoundException ex) {
-                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             } catch (MalformedURLException ex) {
-                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             } catch (RemoteException ex) {
-                Logger.getLogger(TicTacToe.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
             if (cl == null) {
                 System.out.println("Everything went to shits!!");
