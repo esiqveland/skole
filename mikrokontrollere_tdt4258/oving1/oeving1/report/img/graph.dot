@@ -17,7 +17,7 @@ digraph G {
 	S6 [label="led at left end?"]
 	SW0 -> S5 [label="SW0 pressed"]
 	SW2 -> S6 [label="SW2 pressed"]
-	SW2 -> S0 [label="no button pressed (eg. released)"]
+	SW2 -> S15 [label="no button pressed (eg. released)"]
 
 	S5 -> S7 [label="yes"]
 	S6 -> S8 [label="yes"]
@@ -44,7 +44,12 @@ digraph G {
 	
 	S14 [label="Turn on leds"]
 	S13 -> S14
-	S14 -> S0 [label="go to sleep"]
+
+	S15 [label="return from interrupt (rete)"]
+	S14 -> S15
+	S16 [label="main loop"]
+	S15 -> S16
+	S16 -> S0 [label="go to sleep"]
 
 //	S6 [peripheries=2]
 //	S7 [peripheries=2]
