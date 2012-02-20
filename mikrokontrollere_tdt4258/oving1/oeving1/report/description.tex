@@ -1,0 +1,31 @@
+\section{Description and methodology}
+
+
+The whole exercise was done in small increments. We started by learning how to control the LEDs. Then we made registering button presses work, followed by altering the LEDs on a button press. Finally we combined everything together with an interrupt routine. We will now look more closely on each step.
+
+\subsection{Overall hardware setup}
+
+All jumper settings were checked and done as described in the exercise description. We connected the LEDs with an 8-pin flat cable to the GPIO pins 0-7, which are mapped to PIOB pins 0-7. A second 8-pin flat cable connected buttons 0-7 to GPIO pins 16-23, which are mapped to PIOC pins 0-7.
+
+\subsection{Controlling the LEDs}
+
+With our setup the 8 LEDs can be controlled through PIO port B pins 0 - 7. We started by enabling these pins on the IO-controller. This is done by writing 0b11111111 to the address for PIOB + offset for the enable register (called PIO\_PER). Next we enabled output on the pins by writing 0b11111111 to the address for PIOB + offset for the enable output register (called PIO\_OER). Which LEDs are actually turned on can be controlled by writing to the register with offset PIO\_SODR, and turned off by writing to the register with offset PIO\_CODR, together with an 8-bit bitmask corresponding to LED 0-7.
+
+\subsection{Buttons}
+
+The buttons SW0-7 were in our case connected to GPIO pins 16-23, which in turn are connected to PIO port C pins 0-7. These are enabled by writing to PIO port Cs address plus the offset PIO\_PER. Since these are reading changes in value, we also need to enable the pull-up resistors by writing to the corresponding enable register. The status of these buttons can be read by copying from address (reading register) PIO\_C + PIO\_PDSR, where the lower-most byte corresponds to the status of the 8 buttons.
+
+\subsection{Interrupts}
+
+The AVR32 supports interrupt driven IO. To enable interrupts on our buttons several things must be taken care of. First we need to tell the IO-controller to enable interrupts on the buttons. This is done by writing to register with address PIOC + offset PIO\_IER. Next the interrupt controller needs to get an address (14 bits) in the register corresponding to interrupts from PIO\_C on line 0. The code at this address is the interrupt routine code that will be called. This address is called the autovector. The full address for the code called however, is the result of the variable EVBA + the autovector. In this exercise we can set the EVBA to 0 and just pass the address for where our interrupt routine resides, which helps simplify. Lastly we must enable interrupts for the whole system by setting the GM bit, done by the instruction csrf 16.
+
+\subsection{Main program}
+%\pagebreak
+\begin{figure}[here]
+\includegraphics[width=0.9\textwidth]{img/graph.png}
+\caption{Flowchart showing the flow of the main program loop and the interrupt routine}
+\label{fig:mainflow}
+\end{figure}
+
+The main program is a loop structured as the flowchart of Figure \ref{fig:mainflow}. 
+

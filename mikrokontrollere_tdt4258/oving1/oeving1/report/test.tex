@@ -1,0 +1,9 @@
+\section{Results and Tests}
+
+
+	The result was a working program that used interrupts to run a routine that would read if a certain button was pressed and move the led appropriately. It waits in an infinite (sleeping) loop until an interrupt occurs. It then reads the value of the buttons pressed from the I/O device where it is mapped in memory and updates the led lights if either of the two designated buttons are pressed. One button has precedence over the other, and pressing other buttons at the same time will not affect the outcome. A sleep loop is used to counter bouncing on button presses. The program is written in assembly.
+
+
+The finished program was tested by pressing one or more buttons to see if we could create unexpected behavior. It was cycled to the left and right so that it looped around to make sure that this worked. Then several buttons was pressed at once to see if this influenced behavior. Everything worked except for when one of the two control buttons is held down, and the other pressed. When this generates an interrupt, the button that has precedence over the other will dominate and the light might move in a way other than intended. This bug can be fixed by saving which button generated the interrupt and checking this when deciding which way to move the light, but we did not have time to implement this.
+
+Earlier in development testing was done by running the program and debugging using the GNU debugger. We would compare register values with what we had on paper to verify that the code was working as intended after each instruction. Most importantly, we would start the program at the beginning and go through it instruction by instruction to see check if we had loaded the intended values into registers. After we had verified that the values we loaded into registers were indeed the ones we had intended, we moved on to testing by pressing buttons.

@@ -1,0 +1,52 @@
+digraph G {
+	layout=dot
+	
+	rankdir=TB // direction, Left-to-Right, TB = top-bottom
+	size="7.5,10"
+	start [shape=plaintext] // no shape for this node, just text
+	start -> S0 
+	S0 [label="sleep"]
+	
+	S2 [label="run interrupt routine"]
+	S0 -> S2 [label="interrupt"]
+	
+	S2 -> SW0 	
+	SW0 -> SW2 [label="SW0 NOT pressed"]
+	
+	S5 [label="led at right end?"]
+	S6 [label="led at left end?"]
+	SW0 -> S5 [label="SW0 pressed"]
+	SW2 -> S6 [label="SW2 pressed"]
+	SW2 -> S0 [label="no button pressed (eg. released)"]
+
+	S5 -> S7 [label="yes"]
+	S6 -> S8 [label="yes"]
+
+//	S11 [label="set leds to left side"]
+//	S12 [label="set leds to right side"]
+//	S7 -> S11
+//	S8 -> S12
+	S7 [label="set led to left side"]
+	S8 [label="set led to right side"]
+
+	
+	S9 [label="move led right"]
+	S10 [label="move led left"]
+	S5 -> S9 [label="no"]
+	S6 -> S10 [label="no"]
+
+
+	S13 [label="Turn off leds"]
+	S7  -> S13
+	S8  -> S13
+	S9  -> S13
+	S10 -> S13
+	
+	S14 [label="Turn on leds"]
+	S13 -> S14
+	S14 -> S0 [label="go to sleep"]
+
+//	S6 [peripheries=2]
+//	S7 [peripheries=2]
+	
+}
