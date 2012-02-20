@@ -1,0 +1,26 @@
+ps3: simplifying the parse tree
+ - to make the code generation easier
+
+tree simplification:
+ varlist
+  vara
+  varlist
+   varb
+   varlist
+    varc
+to:
+ varlist
+  vara
+  varb
+  varc
+
+also compress expressions
+
+
+hashtable for C
+ - libghthash
+ - not for ps3, only for ps4
+ - used for symbol tables in compilers
+
+
+
