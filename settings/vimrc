@@ -54,3 +54,8 @@ endif
 "  source /etc/vim/vimrc.local
 "endif
 
+"Toggle auto indent on and off with F2 for easier pasting of code:
+nnoremap <F2> :set invpaste paste?<CR>
+set pastetoggle=<F2>
+set showmode
+
