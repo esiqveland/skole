@@ -27,8 +27,6 @@ The AVR32 supports interrupt driven IO. To enable interrupts on our buttons seve
 \label{fig:mainflow}
 \end{figure}
 
-The main program is a loop structured as the flowchart of Figure \ref{fig:mainflow}. We start off however by loading the addresses of PIOB, PIOC and the IO controller into registers r0, r1 and r2, respectively (not shown in figure). We then continue to set up the different io controllers and cpu as described in the sections above. The autovector is set to the address of the \texttt{handle\_interrupt} routine. The routine first determines if one of our predetermined buttons caused the interrupt, then figures out which one of these buttons is pressed right now, if any. If the correct button is pressed during the interrupt, the program then does a logical right or left shift of the LED lights, according to the button that was pressed. If the result after the logical shift is too big, or too small, the LEDs are reset to light up on the other end. E.g. if the value of the enabled LEDs is 0 after a logical right shift, it means that we should reset the light to show up on the other side. This works similarly for the left to right button, where we check if the value is bigger than the 8 lower bits. We then clear all the glowing LEDs and enable the row with the new bitmask, \texttt{rete} (return from interrupt) and go to sleep again. An overview of CPU registers in particular use is given in Table \ref{table:cpuregs}.
-
 \begin{table}
  \centering
  \begin{tabular}{| c | l |}
@@ -43,4 +41,7 @@ The main program is a loop structured as the flowchart of Figure \ref{fig:mainfl
  \caption{CPU registers used}
  \label{table:cpuregs}
 \end{table}
+
+The main program is a loop structured as the flowchart of Figure \ref{fig:mainflow}. We start off however by loading the addresses of PIOB, PIOC and the IO controller into registers r0, r1 and r2, respectively (not shown in figure). We then continue to set up the different io controllers and cpu as described in the sections above. The autovector is set to the address of the \texttt{handle\_interrupt} routine. The routine first determines if one of our predetermined buttons caused the interrupt, then figures out which one of these buttons is pressed right now, if any. If the correct button is pressed during the interrupt, the program then does a logical right or left shift of the LED lights, according to the button that was pressed. If the result after the logical shift is too big, or too small, the LEDs are reset to light up on the other end. E.g. if the value of the enabled LEDs is 0 after a logical right shift, it means that we should reset the light to show up on the other side. This works similarly for the left to right button, where we check if the value is bigger than the 8 lower bits. We then clear all the glowing LEDs and enable the row with the new bitmask, \texttt{rete} (return from interrupt) and go to sleep again. An overview of CPU registers in particular use is given in Table \ref{table:cpuregs}.
+
 
