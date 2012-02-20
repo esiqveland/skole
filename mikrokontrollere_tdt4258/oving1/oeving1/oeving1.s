@@ -119,7 +119,7 @@ interrupt_handler_sleep_end: /* now we handle the interrupt */
 
 
 teit_loop:
-	/* maybe go to sleep here? */
+	sleep 0
 	rjmp teit_loop
 
 
