@@ -5,6 +5,7 @@ nbbuild/
 dist/
 nbdist/
 nbactions.xml
+private.xml
 nb-configuration.xml
 
 # Class Files #
