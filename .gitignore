@@ -2,6 +2,7 @@
 *.aux
 *.toc
 *.log
+report.pdf
 
 # NetBeans specific #
 nbproject/private/
