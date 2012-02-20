@@ -9,15 +9,15 @@ digraph G {
 	
 	S2 [label="run interrupt routine"]
 	S0 -> S2 [label="interrupt"]
-	S2 -> S0 [label="button not pressed (eg. released)"]
 	
-	S2 -> SW0 [label="SW0 pressed"]
-	S2 -> SW2 [label="SW2 pressed"]
+	S2 -> SW0 	
+	SW0 -> SW2 [label="SW0 NOT pressed"]
 	
 	S5 [label="led at right end?"]
 	S6 [label="led at left end?"]
-	SW0 -> S5
-	SW2 -> S6
+	SW0 -> S5 [label="SW0 pressed"]
+	SW2 -> S6 [label="SW2 pressed"]
+	SW2 -> S0 [label="no button pressed (eg. released)"]
 
 	S5 -> S7 [label="yes"]
 	S6 -> S8 [label="yes"]
