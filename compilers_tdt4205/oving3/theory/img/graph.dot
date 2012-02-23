@@ -1,0 +1,80 @@
+digraph G {
+	layout=dot
+	
+	rankdir=TB // direction, LR=Left-to-Right, TB = top-bottom
+	size="7.5,10"
+	start [shape=plaintext] // no shape for this node, just text
+	start -> F
+	F [label="F"]
+
+	S1 [label="\"f\""]
+	S2 [label="I"]
+	S3 [label="\"v\""]
+	S4 [label="A"]
+	S5 [label="\"w\""]
+	S6 [label="S"]
+	S7 [label="\"x\""]
+	F -> S1
+	F -> S2
+	F -> S3
+	F -> S4
+	F -> S5
+	F -> S6
+	F -> S7
+	
+	S8 [label="\"i\""]
+	S2 -> S8
+	
+	S9 [label="P"]
+	S4 -> S9
+	
+	S10 [label="P'"]
+	S9 -> S10
+	
+	S11 [label="IP'"]
+	S12 [label="\"i\""]
+	S10 -> S11
+	S11 -> S12
+
+	S13 [label="IP'"]
+	S14 [label="\"i\""]
+	S11 -> S13
+	S13 -> S14
+
+	S15 [label="IP'"]
+	S16 [label="\"i\""]
+	S13 -> S15
+	S15 -> S16
+
+	S17 [label="IP'"]
+	S18 [label="\"i\""]
+	S15 -> S17
+	S17 -> S18
+	S19 [label="ϵ"]
+	S17 -> S19
+
+	S20 [label="S\'"]	
+	S21 [label="\"s\""]	
+	S6 -> S20
+	S6 -> S21
+
+	S22 [label="S\'"]
+	S23 [label="\"s\""]
+	S20 -> S22
+	S20 -> S23
+
+	S24 [label="S\'"]
+	S25 [label="\"s\""]
+	S22 -> S24
+	S22 -> S25
+	S26 [label="ϵ"]
+	S24 -> S26
+
+
+
+//	S11 [label="set leds to left side"]
+//	S12 [label="set leds to right side"]
+//	S7 -> S11
+//	S8 -> S12
+	
+}

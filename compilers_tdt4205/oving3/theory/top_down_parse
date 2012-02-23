@@ -1,0 +1,78 @@
+Stack			Input			    Rule
+$			f i v i i i i w s s s x	    
+f, $			i v i i i i w s s s x	    SHIFT
+f i, $			v i i i i w s s s x	    SHIFT
+f I, $			v i i i i w s s s x	    REDUCE
+f I v i, $		i i i w s s s x		    SHIFT
+f I v I, $		i i i w s s s x		    REDUCE
+f I v I i, $		i i w s s s x		    SHIFT
+f I v I I, $		i i i w s s s x		    REDUCE
+f I v I I i, $		i w s s s x		    SHIFT
+f I v I I I, $		i w s s s x		    REDUCE
+f I v I I I i, $	w s s s x		    SHIFT
+f I v I I I I, $	w s s s x		    REDUCE
+f I v I I I P', $	w s s s x		    REDUCE
+f I v I I P', $		w s s s x		    REDUCE
+f I v I P', $		w s s s x		    REDUCE
+f I v P', $		w s s s x		    REDUCE
+f I v P, $		w s s s x		    REDUCE
+f I v A, $		w s s s x		    REDUCE
+f I v A w, $		s s s x		    	    SHIFT
+f I v A w s, $		s s x		    	    SHIFT
+f I v A w s s, $	s x		    	    SHIFT
+f I v A w s s s, $	x		    	    SHIFT
+f I v A w s s S', $	x		    	    REDUCE
+f I v A w s S', $	x		    	    REDUCE
+f I v A w S, $		x		    	    REDUCE
+f I v A w S x, $			    	    SHIFT
+F, $			    	    		    REDUCE
+$						    ACCEPTED
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stack			Input			     Rule (production)
+F, $			
+f I v A w S x, $	f i v i i i i w s s s x      F
+I v A w S x, $		i v i i i i w s s s x        I
+i v A w S x, $		i v i i i i w s s s x        elim
+v A w S x, $		v i i i i w s s s x          elim
+A w S x, $		i i i i w s s s x	     A
+P w S x, $		i i i i w s s s x	     P
+P' w S x, $		i i i i w s s s x	     P'
+IP' w S x, $		i i i i w s s s x	     I
+iP' w S x, $		i i i i w s s s x	     elim
+P' w S x, $		i i i w s s s x	     	     P'
+IP' w S x, $		i i i w s s s x	     	     I
+iP' w S x, $		i i i w s s s x	     	     elim
+P' w S x, $		i i w s s s x	     	     P'
+IP' w S x, $		i i w s s s x	     	     I
+iP' w S x, $		i i w s s s x	     	     elim
+P' w S x, $		i w s s s x	     	     P'
+IP' w S x, $		i w s s s x	     	     I
+iP' w S x, $		i w s s s x	     	     elim
+P' w S x, $		w s s s x	     	     P' -> epsilon
+w S x, $		w s s s x	     	     elim
+S x, $			s s s x	     	     	     S
+sS' x, $		s s s x			     elim
+S' x, $		        s s x			     S'
+sS' x, $		s s x			     elim
+S' x, $			s x			     S'
+sS' x, $		s x			     elim
+S' x, $			x			     S' -> epsilon
+x, $			x			     elim
+$						     GREAT SUCCESS!!
+
+

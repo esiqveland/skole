@@ -1,0 +1,39 @@
+\subsection{Task 1.3: Syntax-Directed Translation}
+
+
+\subsubsection{}
+A syntax directed definition is a parser where the productions can have semantic rules, and nonterminals with attributes.
+This is useful when we want to use the parser for semantic analysis and translation. 
+
+\subsubsection{}
+S-attributed syntax directed definitions only use synthesized attributes, which means all attributes on the left side of a production may only use attributes from the right-hand side (attributes may only be passed up the parse tree).
+L-attributed SDDs may also use attributes of parent nodes when evaluating atttributes, e.g. a right-hand side attribute may use attributes from the left-hand side.
+GNU Bison does not support L-attributed SDDs because it generates bottom-up parser, which means the children nodes are generated before the parent nodes, and therefore can not depend on attributes stored in parent nodes.
+
+\subsubsection{}
+
+\begin{description}
+ \item[] $E \rightarrow E + T | T$
+ \item[] $T \rightarrow num , num | num$
+\end{description}
+
+\begin{lstlisting}
+E:  E1 + T      { if(E1.type == FLOAT || T.type == FLOAT) then;
+			E.type = FLOAT
+		  else
+	                E.type = INTEGER
+		  fi}
+  | T		{ E.type = T.type }
+  ;
+ 
+T:  num "," num { T.type = FLOAT, T.value = float(num) }
+  | num         { T.type = INTEGER, T.value = int(num) }
+  ;
+
+\end{lstlisting}
+
+
+
+
+
+

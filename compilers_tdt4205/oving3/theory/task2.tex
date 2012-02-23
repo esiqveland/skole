@@ -1,0 +1,15 @@
+\subsection{Task 1.2: Symbol tables}
+
+\subsubsection{}
+Symbol tables are typically implemented using hash tables because of the fast lookup.
+
+\subsubsection{}
+If the function has not been defined yet at the moment of assignment, as in this example, we can not know at compile time if the number of parameters is correct when the call \texttt{f(a)}is made on the next line. We also have no info on the return type yet, so we can not say if this is an error.
+
+\subsubsection{}
+In the symbol table we must include number of arguments for the function, and if it is a function pointer type, we must check the function it points to for validity of arguments and correct use of return type.
+%If we are to allow function definitions after usage, our compiler must do 2 passes.
+
+\subsubsection{}
+Add an extra field for variables pointing to functions.
+\texttt{f var func\_ptr type->type}
