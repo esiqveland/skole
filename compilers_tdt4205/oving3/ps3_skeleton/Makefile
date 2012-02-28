@@ -28,7 +28,13 @@ test: all
 	${MAKE} -C vsl_programs test
 vsl_programs/%: all vsl_programs/%.vsl
 	${MAKE} -C vsl_programs $*
-
+eivind:
+	touch test
+	rm test
+	./bin/vslc -f vsl_programs/simplify.vsl 2> tree
+	read
+	vimdiff tree vsl_programs/simplify.tree
+	
 #
 # The binary is built in 'obj' when all the object code is ready.
 # Make a copy of it in 'bin', to leave it around even after cleanup of
