@@ -55,10 +55,8 @@ main ( int argc, char **argv )
     simplify_tree ( &root, root );
 
 #ifdef DUMP_TREES
-    if ( (DUMP_TREES & 2) != 0 ) {
-	fprintf( stdout, "WHOLE TREE PRINTOUT: \n\n");
+    if ( (DUMP_TREES & 2) != 0 )
         node_print ( stderr, root, 0 );
-    }
 #endif
 
     /* Parsing and semantics are ok, redirect stdout to file (if requested) */

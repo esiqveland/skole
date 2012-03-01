@@ -46,16 +46,17 @@ void node_finalize ( node_t *discard );
 void destroy_subtree ( node_t *discard );
 void simplify_tree ( node_t **simplified, node_t *root );
 void bind_names ( node_t *root );
-
-// prototypes
-int subtree_depth( node_t* node, nodetype_t search );
-void flatten_list( node_t* node );
 bool is_prunable( node_t* node );
-void prune_node( node_t* node);
-void dfs( node_t* current, node_t* parent );
-node_t* construct_flatten_list( node_t* node, node_t* parent, nodetype_t search );
-void calculate_expr( node_t* node, node_t* parent );
-void doOp( node_t* node, node_t* parent);
+void prune_node(node_t* node, node_t** simpler);
+void calculate_expr( node_t* node, node_t* parent);
 void unary_minus(node_t* node);
+void doOp( node_t* node, node_t* parent);
+void flatten_list( node_t* node );
+int subtree_depth( node_t* node, nt_number search );
+node_t* construct_flatten_list( node_t* node, node_t* parent, nt_number search );
+void recurse_flatten( node_t* node, int* count, int depth, node_t* parent, nt_number search);
+
+//void prune_node(node_t* node);
+//void prune_useless(node_t* node);
 
 #endif
