@@ -206,20 +206,15 @@ void calculate_expr( node_t* node, node_t* parent) {
     if(node->n_children == 2 &&
        node->children[0]->type.index == integer_n.index &&
        node->children[1]->type.index == integer_n.index) {
-            //fprintf(stdout, " TWO INT CHILDS\n");
             doOp(node, parent);
-    } else {
-                //fprintf(stdout, " NOT TWO INT CHILDS\n");
     }
+
     char* c;
     if(node->data != NULL)
         c = (char*)node->data;
     if(node->n_children==1 && *c == '-' &&
             node->children[0]->type.index == integer_n.index) {
-        //fprintf(stdout, "UMINUS!\n");
         unary_minus(node);
-    } else {
-        //fprintf(stdout, "NOT AN OPERATION!\n");
     }
 }
 
