@@ -65,28 +65,24 @@ destroy_subtree ( node_t *discard )
 
 void prune_print_list(node_t* node, node_t* parent) {
     if(node->type.index == print_list_n.index) {
-
-        //node->data = temp->data;
-        //node->n_children = temp->n_children;
         parent->n_children = node->n_children;
         parent->children = node->children;
-        // free( node );
+        //node_finalize(node);
     }
 }
 
 void dfs( node_t* current, node_t* parent )
 {
-    if(current != NULL) {
-        flatten_list(current);
-        prune_print_list(current, parent);
-        for(int i = 0; i < current->n_children; i++) {
-            dfs(current->children[i], current);
-        }
-        if(current->type.index == expression_n.index) {
-            calculate_expr(current, parent);
-        }
+    if(current == NULL)
+        return;
 
+    flatten_list(current);
+    prune_print_list(current, parent);
+    for(int i = 0; i < current->n_children; i++) {
+        dfs(current->children[i], current);
     }
+    if(current->type.index == expression_n.index)
+        calculate_expr(current, parent);
 
 }
 
@@ -269,14 +265,12 @@ node_t* construct_flatten_list( node_t* node, node_t* parent, nt_number search )
     // how many nodes in the subtree we are flattening (children of parent node)
     int depth = subtree_depth(node, search);
 
-    fprintf( stdout, "Count: %d of list type: %s\n", depth, node->type.text);
-
-    if(search == STATEMENT_LIST)
-        fprintf(stdout, "Depth (num statements under st_list): %d\n", depth);
+    // debug
+    //fprintf( stdout, "Count: %d of list type: %s\n", depth, node->type.text);
 
     int* count;
 
-    // if this is first run, make a parent node
+    // if this is first run, make a parent node to store new children in
     if(parent == NULL) {
         parent = malloc(sizeof(node_t));
         parent->n_children = depth;
@@ -287,9 +281,6 @@ node_t* construct_flatten_list( node_t* node, node_t* parent, nt_number search )
 
     if(node != NULL && node->n_children != 0) {
         recurse_flatten( node, count, depth, parent, search );
-        //for(int i = 0; i < node->n_children; i++) {
-        //recurse_flatten( node->children[i], count, depth, parent, search);
-        //}
     }
     return parent;
 }
@@ -309,6 +300,8 @@ int subtree_depth( node_t* node, nt_number search ) {
     if(node->type.index == search) {
         c=1;//node->n_children;
     }
+
+    // really needed?
     // only recurse to first expression_n, if those are what we are looking for
     if(node->type.index == expression_n.index && expression_n.index == search) {
         //fprintf(stdout, "Found what we are looking for.. returning...\n");
