@@ -64,10 +64,11 @@ destroy_subtree ( node_t *discard )
 }
 
 void prune_print_list(node_t* node, node_t* parent) {
-    if(node->type.index == print_list_n.index) {
+    if(node->type.index == PRINT_LIST) {
         parent->n_children = node->n_children;
         parent->children = node->children;
         //node_finalize(node);
+        free( node );
     }
 }
 
@@ -81,7 +82,7 @@ void dfs( node_t* current, node_t* parent )
     for(int i = 0; i < current->n_children; i++) {
         dfs(current->children[i], current);
     }
-    if(current->type.index == expression_n.index)
+    if(current->type.index == EXPRESSION)
         calculate_expr(current, parent);
 
 }
@@ -91,8 +92,10 @@ simplify_tree ( node_t **simplified, node_t *root )
 {
     /* TODO: implement the simplifications of the tree here */
     *simplified = root;
+
     // prune all redundant nodes first
     prune_node(root, simplified);
+
     *simplified = root;
     // go through the whole tree, doing our work on each node
     dfs(root, root);
@@ -163,12 +166,11 @@ void doOp( node_t* node, node_t* parent) {
         //*result = *tall1 ** *tall2;
     }
     // DEBUG
-    fprintf(stdout, "%d %c %d = %d\n", *tall1, *c, *tall2, *result);
-
+    //fprintf(stdout, "%d %c %d = %d\n", *tall1, *c, *tall2, *result);
     free(node->data);
+    node_finalize(node->children[0]);
+    node_finalize(node->children[1]);
     free(node->children);
-    free(tall1);
-    free(tall2);
     node->n_children = 0;
     node->data = result;
     node->type = integer_n;
