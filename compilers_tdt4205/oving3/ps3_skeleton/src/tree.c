@@ -204,8 +204,8 @@ void calculate_expr( node_t* node, node_t* parent) {
             calculate_expr(node->children[i], node);
 
     if(node->n_children == 2 &&
-       node->children[0]->type.index == integer_n.index &&
-       node->children[1]->type.index == integer_n.index) {
+       node->children[0]->type.index == INTEGER &&
+       node->children[1]->type.index == INTEGER) {
             doOp(node, parent);
     }
 
@@ -213,7 +213,7 @@ void calculate_expr( node_t* node, node_t* parent) {
     if(node->data != NULL)
         c = (char*)node->data;
     if(node->n_children==1 && *c == '-' &&
-            node->children[0]->type.index == integer_n.index) {
+            node->children[0]->type.index == INTEGER) {
         unary_minus(node);
     }
 }
@@ -222,25 +222,13 @@ void calculate_expr( node_t* node, node_t* parent) {
 void recurse_flatten( node_t* node, int* count, int depth, node_t* parent, nt_number search) {
     if(node == NULL)
         return;
-    fprintf(stdout, "\tWE ARE IN NODE TYPE %s\n", node->type.text);
+
     // only recurse to first expression_n, if those are what we are looking for
     if(node->type.index == expression_n.index && expression_n.index == search) {
         fprintf(stdout, "Found what we are looking for.. returning...\n");
         return;
     }
 
-/*
-    // only recurse to first statement node after the list
-    // if not, we will add all statements under a statementlist to the upper statement_list node,
-    // all the way from the bottom
-
-    if(search == STATEMENT_LIST)
-        fprintf(stdout, "Depth: %d count: %d\n", depth, *count);
-        // if we are out of the statement list, break our search down the list
-        if(node->type.index != STATEMENT_LIST)
-            return;
-
-*/
     if(node->type.index == search) {
         // add the nodes that are not the list node we are trying to remove:
         for(int i = 0; i < node->n_children; i++){
@@ -276,7 +264,8 @@ node_t* construct_flatten_list( node_t* node, node_t* parent, nt_number search )
         fprintf( stdout, "NULLNULLNULLNULLL\n");
 
     // what are we flattening? search
-    fprintf( stdout, "FOUND %s IN FLATTEN_LIST\n", node->type.text);
+    //fprintf( stdout, "FOUND %s IN FLATTEN_LIST\n", node->type.text);
+
     // how many nodes in the subtree we are flattening (children of parent node)
     int depth = subtree_depth(node, search);
 
