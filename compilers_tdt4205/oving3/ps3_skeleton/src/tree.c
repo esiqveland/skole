@@ -256,10 +256,13 @@ node_t* construct_flatten_list( node_t* node, nt_number search ) {
     // how many nodes in the subtree we are flattening (children of parent node)
     int depth = subtree_depth(node, search);
 
-    // debug
+    /*// debug
     if(search == EXPRESSION_LIST) {
         fprintf( stdout, "Count: %d of list type: %s\n\tChildren: %d\n", depth, node->type.text, node->n_children);
-    }
+        for(int i = 0; i < node->n_children; i++)
+            fprintf( stdout, "\tchild %d: %s\n", i, node->children[i]->type.text);
+        node_print( stdout, node, 0);
+    }*/
 
     int* count;
 
