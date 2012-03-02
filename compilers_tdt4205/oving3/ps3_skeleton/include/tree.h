@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <math.h>
 #include "nodetypes.h"
 
 /*
@@ -53,7 +54,7 @@ void unary_minus(node_t* node);
 void doOp( node_t* node, node_t* parent);
 void flatten_list( node_t* node );
 int subtree_depth( node_t* node, nt_number search );
-node_t* construct_flatten_list( node_t* node, node_t* parent, nt_number search );
+node_t* construct_flatten_list( node_t* node, nt_number search );
 void recurse_flatten( node_t* node, int* count, int depth, node_t* parent, nt_number search);
 
 //void prune_node(node_t* node);

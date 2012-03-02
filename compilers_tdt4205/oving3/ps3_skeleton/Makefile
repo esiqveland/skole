@@ -17,7 +17,7 @@ INCLUDEPATH=\
     -I/opt/libghthash/0.6.2/include
 
 CFLAGS+=  -D_POSIX_C_SOURCE -std=c99 ${INCLUDEPATH} -DDUMP_TREES=2
-LDFLAGS+= -L/usr/local/lib -L/opt/libghthash/0.6.2/lib
+LDFLAGS+= -L/usr/local/lib -L/opt/libghthash/0.6.2/lib -lm
 YFLAGS+=  --defines=work/parser.h -o y.tab.c
 
 # Targets:

@@ -1,6 +1,7 @@
 #include "tree.h"
 
 
+
 #ifdef DUMP_TREES
 void
 node_print ( FILE *output, node_t *root, uint32_t nesting )
@@ -104,14 +105,13 @@ simplify_tree ( node_t **simplified, node_t *root )
 // node is prunable if has 1 child and contains no data
 // and is of the mentioned types
 bool is_prunable( node_t* node ) {
-    if( node->n_children == 1 && node->data == NULL ) {
-        switch( node->type.index ) {
-            case STATEMENT: return true; break;
-            case PARAMETER_LIST: return true; break;
-            case PRINT_ITEM: return true; break;
-            case ARGUMENT_LIST: return true; break;
-            case EXPRESSION: return true; break;
-        }
+    switch( node->type.index ) {
+        case STATEMENT: return true; break;
+        case PARAMETER_LIST: return true; break;
+        case PRINT_ITEM: return true; break;
+        case ARGUMENT_LIST: return true; break;
+        case EXPRESSION:
+            return node->n_children == 1 && node->data == NULL;
     }
     return false;
 }
@@ -126,7 +126,10 @@ void prune_node(node_t* node, node_t** simpler) {
 
     if(is_prunable(node)) {
         // update the pointer pointing to the node we want to point to instead
-        prune_node(node->children[0], simpler);
+        //prune_node(node->children[0], simpler);
+        for(int i = 0; i < node->n_children; i++) {
+            prune_node(node->children[i], simpler);
+        }
         // clean up node we are removing
         node_finalize(node);
     } else {
@@ -144,7 +147,7 @@ void prune_node(node_t* node, node_t** simpler) {
 
 void doOp( node_t* node, node_t* parent) {
     // DEBUG
-    fprintf(stdout, "doOp(%s)", node->data);
+    //fprintf(stdout, "doOp(%s)", node->data);
 
     uint32_t* result = malloc(sizeof(uint32_t));
     uint32_t* tall1 = (uint32_t*)node->children[0]->data;
@@ -163,30 +166,30 @@ void doOp( node_t* node, node_t* parent) {
         *result = *tall1 / *tall2;
     }
     if(*c == '^') {
-        //*result = *tall1 ** *tall2;
+        *result = (int)pow((double)*tall1, *tall2);
     }
     // DEBUG
     //fprintf(stdout, "%d %c %d = %d\n", *tall1, *c, *tall2, *result);
     free(node->data);
     node_finalize(node->children[0]);
     node_finalize(node->children[1]);
-    free(node->children);
+    //free(node->children);
     node->n_children = 0;
     node->data = result;
     node->type = integer_n;
-    // finalize the children?
-
 }
+
 void unary_minus(node_t* node) {
     uint32_t* tall = malloc(sizeof(uint32_t));
-    uint32_t* tall2 = node->children[0]->data;
-    *tall = -1* *tall2;
+    //uint32_t* tall2 = node->children[0]->data;
+    *tall = -1* *((uint32_t*)(node->children[0]->data)); //*tall2;
 
-    free(node->data);
-    free(node->children);
+    //free(node->data);
+    //node_finalize( node->children[0] );
     node->n_children = 0;
     node->data = tall;
     node->type = integer_n;
+    //free(node->children);
 }
 
 void calculate_expr( node_t* node, node_t* parent) {
@@ -221,24 +224,14 @@ void recurse_flatten( node_t* node, int* count, int depth, node_t* parent, nt_nu
     if(node == NULL)
         return;
 
-    // only recurse to first expression_n, if those are what we are looking for
-    if(node->type.index == expression_n.index && expression_n.index == search) {
-        fprintf(stdout, "Found what we are looking for.. returning...\n");
-        return;
-    }
-
     if(node->type.index == search) {
         // add the nodes that are not the list node we are trying to remove:
         for(int i = 0; i < node->n_children; i++){
             node_t* temp = node->children[i];
 
-            if(temp == NULL)
-                fprintf( stdout, "\tA NULL CHILD!!!!\n");
-            else{
+            if(temp != NULL) {
                 if(temp->type.index != search) {
-                    fprintf( stdout, "FOUND A CHILD NUMBER: %d of type: %s\n", *count, temp->type.text);
-                    if(temp == NULL)
-                        fprintf( stdout, "\tA NULL CHILD!!!!\n");
+                    //fprintf( stdout, "FOUND A CHILD NUMBER: %d of type: %s\n", *count, temp->type.text);
                     if( *count >= 0 ) {
                         parent->children[*count] = temp;
                         *count = *count-1;
@@ -252,23 +245,21 @@ void recurse_flatten( node_t* node, int* count, int depth, node_t* parent, nt_nu
             recurse_flatten( node->children[i], count, depth, parent, search );
         }
     }
-
-
-
 }
 
-node_t* construct_flatten_list( node_t* node, node_t* parent, nt_number search ) {
+node_t* construct_flatten_list( node_t* node, nt_number search ) {
     if(node == NULL)
         fprintf( stdout, "NULLNULLNULLNULLL\n");
 
-    // what are we flattening? search
-    //fprintf( stdout, "FOUND %s IN FLATTEN_LIST\n", node->type.text);
+    node_t* parent = NULL;
 
     // how many nodes in the subtree we are flattening (children of parent node)
     int depth = subtree_depth(node, search);
 
     // debug
-    //fprintf( stdout, "Count: %d of list type: %s\n", depth, node->type.text);
+    if(search == EXPRESSION_LIST) {
+        fprintf( stdout, "Count: %d of list type: %s\n\tChildren: %d\n", depth, node->type.text, node->n_children);
+    }
 
     int* count;
 
@@ -281,9 +272,8 @@ node_t* construct_flatten_list( node_t* node, node_t* parent, nt_number search )
         *count = depth-1;
     }
 
-    if(node != NULL && node->n_children != 0) {
-        recurse_flatten( node, count, depth, parent, search );
-    }
+    recurse_flatten( node, count, depth, parent, search );
+
     return parent;
 }
 
@@ -303,13 +293,6 @@ int subtree_depth( node_t* node, nt_number search ) {
         c=1;//node->n_children;
     }
 
-    // really needed?
-    // only recurse to first expression_n, if those are what we are looking for
-    if(node->type.index == expression_n.index && expression_n.index == search) {
-        //fprintf(stdout, "Found what we are looking for.. returning...\n");
-        return c;
-    }
-
     if(node->n_children > 0) {
         for(int i = 0; i < node->n_children; i++)
             c += subtree_depth(node->children[i], search);
@@ -326,27 +309,27 @@ void flatten_list( node_t* node )
     node_t* new_node = NULL;
 
     if(node->type.index == statement_list_n.index) {
-        new_node = construct_flatten_list(node, NULL, STATEMENT_LIST);
+        new_node = construct_flatten_list(node, STATEMENT_LIST);
         new_node->type = statement_list_n;
     }
     else if(node->type.index == print_list_n.index) {
-        new_node = construct_flatten_list(node, NULL, PRINT_LIST);
+        new_node = construct_flatten_list(node, PRINT_LIST);
         new_node->type = print_list_n;
     }
     else if(node->type.index == function_list_n.index) {
-        new_node = construct_flatten_list(node, NULL, FUNCTION_LIST);
+        new_node = construct_flatten_list(node, FUNCTION_LIST);
         new_node->type = function_list_n;
     }
     else if(node->type.index == declaration_list_n.index) {
-        new_node = construct_flatten_list(node, NULL, DECLARATION_LIST);
+        new_node = construct_flatten_list(node, DECLARATION_LIST);
         new_node->type = declaration_list_n;
     }
     else if(node->type.index == expression_list_n.index) {
-        new_node = construct_flatten_list(node, NULL, EXPRESSION_LIST);
+        new_node = construct_flatten_list(node, EXPRESSION_LIST);
         new_node->type = expression_list_n;
     }
     else if(node->type.index == variable_list_n.index) {
-        new_node = construct_flatten_list(node, NULL, VARIABLE_LIST);
+        new_node = construct_flatten_list(node, VARIABLE_LIST);
         new_node->type = variable_list_n;
     }
 
@@ -355,9 +338,7 @@ void flatten_list( node_t* node )
         node->children = new_node->children;
         node->type = new_node->type;
     }
-
     return;
-
 }
 
 
