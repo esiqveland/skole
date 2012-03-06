@@ -1,5 +1,5 @@
 .data
-.INTEGER: .string "%d"
+.INTEGER: .string "%d\n"
 .STRING0: .string "Sum is "
 .STRING1: .string "You need at least one argument.\n"
 
@@ -22,8 +22,6 @@ forloop:
     movl    -12(%ebp),%ebx
     cmp     -8(%ebp),%ebx /* do i == N */
     je      loopend            /* if equal, return */
-/*    xor     %edx,%edx*/
-/*    movl    0, %edx*/
     movl    -8(%ebp),%eax /* copy i to eax for division */
     cdq		/* sign extend */
     movl    $3, %ebx   /* divide and modulo, mod is put in EDX */
@@ -33,7 +31,7 @@ forloop:
     /* add i to sum */
     movl    -8(%ebp), %ebx
     addl    %ebx, -4(%ebp)
-    jmp     modfive
+    jmp     forloop
 modfive:
     movl    -8(%ebp),%eax /* copy i to eax for division */
     cdq		/* sign extend */
@@ -47,6 +45,11 @@ modfive:
     jmp forloop
 loopend:
     movl    -4(%ebp), %edx /* save sum in edx */
+    /* print the return value we stored in edx before returning */
+    pushl   %edx
+    pushl   $.INTEGER
+    call    printf
+    addl    $8,%esp /* remove args */
     leave
     ret
 
@@ -87,11 +90,6 @@ args_ok:
 
     /* Call foo(), with one argument (top of stack) */
     call    foo
-
-    /* print the return value we stored in edx before returning */
-    pushl   $.INTEGER
-    pushl   %edx
-    call    printf
 
     /* Tear down the stack frame */
     leave
