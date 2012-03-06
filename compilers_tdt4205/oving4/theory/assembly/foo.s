@@ -9,47 +9,46 @@
 
 
 foo:
-    /* YOUR CODE HERE! */
     /* create stack frame */
     pushl   %ebp
-    movl    %esp, %ebp /* copy stack pointer to base pointer */
-    pushl   $0 /* int sum, first local on stack, access with -4(%ebp) */
-    pushl   $0 /* int i = 1; the counter; second local on stack, access with -8(%ebp) */
-    pushl   8(%ebp) /* argument 1; third local on stack, access with -12(%ebp) */
+    movl    %esp, %ebp    /* copy stack pointer to base pointer */
+    pushl   $0            /* int sum, first local on stack, access with -4(%ebp) */
+    pushl   $0            /* int i = 1; the counter; second local on stack, access with -8(%ebp) */
+    pushl   8(%ebp)       /* argument 1; third local on stack, access with -12(%ebp) */
 
 forloop:
     incl    -8(%ebp)
     movl    -12(%ebp),%ebx
-    cmp     -8(%ebp),%ebx /* do i == N */
-    je      loopend            /* if equal, return */
-    movl    -8(%ebp),%eax /* copy i to eax for division */
-    cdq		/* sign extend */
-    movl    $3, %ebx   /* divide and modulo, mod is put in EDX */
-    divl    %ebx
+    cmp     -8(%ebp),%ebx  /* do i == N */
+    je      loopend        /* if equal, return */
+    movl    -8(%ebp),%eax  /* copy i to eax for division */
+    cdq		           /* sign extend */
+    movl    $3, %ebx        
+    divl    %ebx           /* divide and modulo, mod is put in EDX */
     cmp     $0, %edx
-    jne     modfive
+    jne     modfive        /* i mod 3 != 0; then try with i mod 5 */
     /* add i to sum */
     movl    -8(%ebp), %ebx
     addl    %ebx, -4(%ebp)
     jmp     forloop
 modfive:
-    movl    -8(%ebp),%eax /* copy i to eax for division */
-    cdq		/* sign extend */
+    movl    -8(%ebp),%eax  /* copy i to eax for division */
+    cdq		           /* sign extend */
     movl    $5, %ebx
-    divl    %ebx   /* divide and modulo, mod is put in EDX */
+    divl    %ebx           /* divide and modulo, mod is put in EDX */
     cmp     $0, %edx
-    jne     forloop
+    jne     forloop        /* i mod 5 != 0; then go to start of for loop */
     /* add i to sum */
     movl    -8(%ebp), %ebx
     addl    %ebx, -4(%ebp)
     jmp forloop
 loopend:
+    /* print the sum */
     movl    -4(%ebp), %edx /* save sum in edx */
-    /* print the return value we stored in edx before returning */
     pushl   %edx
     pushl   $.INTEGER
     call    printf
-    addl    $8,%esp /* remove args */
+    addl    $8,%esp        /* remove args */
     leave
     ret
 
