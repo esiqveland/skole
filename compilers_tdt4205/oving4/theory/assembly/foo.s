@@ -1,6 +1,6 @@
 .data
 .INTEGER: .string "%d\n"
-.STRING0: .string "Sum is "
+.STRING0: .string "Sum is %d\n"
 .STRING1: .string "You need at least one argument.\n"
 
 .globl main
@@ -14,13 +14,12 @@ foo:
     movl    %esp, %ebp    /* copy stack pointer to base pointer */
     pushl   $0            /* int sum, first local on stack, access with -4(%ebp) */
     pushl   $0            /* int i = 1; the counter; second local on stack, access with -8(%ebp) */
-    pushl   8(%ebp)       /* argument 1; third local on stack, access with -12(%ebp) */
 
 forloop:
     incl    -8(%ebp)
-    movl    -12(%ebp),%ebx
-    cmp     -8(%ebp),%ebx  /* do i == N */
-    je      loopend        /* if equal, return */
+    movl    8(%ebp),%ebx
+    cmp     %ebx,-8(%ebp)  /* do i == N */
+    jge      loopend        /* if equal, return */
     movl    -8(%ebp),%eax  /* copy i to eax for division */
     cdq		           /* sign extend */
     movl    $3, %ebx        
@@ -46,7 +45,7 @@ loopend:
     /* print the sum */
     movl    -4(%ebp), %edx /* save sum in edx */
     pushl   %edx
-    pushl   $.INTEGER
+    pushl   $.STRING0
     call    printf
     addl    $8,%esp        /* remove args */
     leave
