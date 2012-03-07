@@ -12,6 +12,20 @@ static int32_t strings_size = 16, strings_index = -1;
 void
 symtab_init ( void )
 {
+	/* initialize scopes */
+	scopes = malloc(sizeof(hash_t*)*scopes_size);
+	for(int i = 0; i < scopes_size; i++) {
+		scopes[i] = ght_create(10); /* (N is # of hash buckets), don't know what this is supposed to be */
+	}
+
+	/* init values */
+	values = malloc(sizeof(symbol_t*)*values_size);
+	for(int i = 0; i < values_size; i++) {
+		values[i] = malloc(sizeof(symbol_t));
+	}
+
+	/* init strings */
+	strings = malloc(sizeof(char*)*strings_size);
 }
 
 
@@ -64,3 +78,5 @@ symbol_get ( symbol_t **value, char *key )
         fprintf ( stderr, "Retrieving (%s,%d)\n", key, result->stack_offset );
 #endif
 }
+
+/* vim: set ts=4 sw=4: */
