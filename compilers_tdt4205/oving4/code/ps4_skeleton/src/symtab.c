@@ -14,18 +14,11 @@ symtab_init ( void )
 {
 	/* initialize scopes */
 	scopes = malloc(sizeof(hash_t*)*scopes_size);
-//	for(int i = 0; i < scopes_size; i++) {
-//		scopes[i] = ght_create(10); /* (N is # of hash buckets), 
-//									 * don't know what this is supposed to be */
-//	}
 
 	/* init values */
 	values = malloc(sizeof(symbol_t*)*values_size);
-//	for(int i = 0; i < values_size; i++) {
-//		values[i] = malloc(sizeof(symbol_t));
-//	}
 
-	/* init strings */
+    /* init strings */
 	strings = malloc(sizeof(char*)*strings_size);
 }
 
@@ -33,9 +26,6 @@ symtab_init ( void )
 void
 symtab_finalize ( void )
 {
-//    for(int i = 0; i < scopes_size; i++) {
-//        free( scopes[i] );
-//    } // freed by ght_finalize
     free(scopes);
 
     for(int i = 0; i < values_size; i++) {

@@ -255,11 +255,13 @@ void bind_names ( node_t* root )
                     bind_names(child);
                     scope_remove();
                     break;
+
                 case FUNCTION: ;
                     /* reset depth, add arguments */
                     dybde = 0;
                     local_offset = -4;
                     scope_add();
+
                     // add vars in the var list under (arguments)
                     node_t* varlist = child->children[1];
                     if( varlist != NULL) {
@@ -292,6 +294,7 @@ void bind_names ( node_t* root )
 					dybde--;
 					scope_remove();
 					break;
+
                 case DECLARATION_LIST: ;
 					for( int dec = 0; dec < child->n_children; dec++) {
 						node_t* declaration = child->children[dec];
@@ -312,24 +315,26 @@ void bind_names ( node_t* root )
 						}
 					}
                     //return; // safe to return now ?
-                    //bind_names(child);
+                    //bind_names(child); // not needed?
 					break;
+
                 case VARIABLE: ;
                     char* key = child->data;
                     symbol_t* temp = NULL;
                     symbol_get( &temp, key );
-                    if( temp == NULL ) { // symbol not yet declared, error ?
-                        //fprintf( stdout, "Variable: temp is NULL\n\tSYMBOL \"%s\"NOT FOUND\n", child->data);
-                    } else {
+                    if( temp != NULL ) {
                         child->entry = temp;
-                    }
+                    } // else { // symbol not yet declared, error ?
+
 					bind_names( child );
 					break;
                 case TEXT: ;
+
                     uint32_t* index = malloc(sizeof(uint32_t));
                     *index = strings_add(child->data);
                     child->data = index;
                     break;
+
                 default: ;
 					bind_names( child );
 			}
