@@ -27,3 +27,5 @@ void scope_remove ( void );
 void symbol_insert ( char *key, symbol_t *value );
 void symbol_get ( symbol_t **value, char *key );
 #endif
+
+/* vim: set ts=4 sw=4: */

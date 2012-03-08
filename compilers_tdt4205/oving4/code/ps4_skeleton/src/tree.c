@@ -177,8 +177,8 @@ simplify_tree ( node_t **simplified, node_t *root )
                     case 2:     /* Constant binary expressions */
                         if ( root->children[0]->type.index == INTEGER &&
                              root->children[1]->type.index == INTEGER &&
-                             root->data != NULL
-                        ) {
+                             root->data != NULL )
+                        {
                             result = root->children[0];
                             int32_t
                                 *a = result->data,
@@ -190,9 +190,9 @@ simplify_tree ( node_t **simplified, node_t *root )
                                 case '*': *a *= *b; break;
                                 case '/': *a /= *b; break;
                                 case '^': 
-                                          if (*b < 0 && *a != 1) *a = 0; 
-                                          else 
-                                          {
+                                          if (*b < 0 && *a != 1)
+                                              *a = 0;
+                                          else {
                                               *a = 1;
                                               for (int32_t x=*a, c=*b; c > 0; c--) 
                                                   *a *= x; 
@@ -211,12 +211,17 @@ simplify_tree ( node_t **simplified, node_t *root )
 }
 
 
-void
-bind_names ( node_t *root )
+void bind_names ( node_t* root )
 {
     /* TODO: bind tree nodes to symtab entries */
+	switch(root->type.index) {
+		/* push scope */
+		case BLOCK:
+			scope_add();
+			break;
+		case DECLARATION:
+		case PARA
 
 }
 
-
-/* vim: set sw=4: */
+/* vim: set ts=4 sw=4: */
