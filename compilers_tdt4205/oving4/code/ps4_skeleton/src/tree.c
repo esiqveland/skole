@@ -2,6 +2,7 @@
 #include "symtab.h"
 
 static int dybde = 0;
+int local_offset = -4;
 
 #ifdef DUMP_TREES
 void
@@ -212,66 +213,97 @@ simplify_tree ( node_t **simplified, node_t *root )
     *simplified = result;
 }
 
+void add_functions( node_t* child )
+{
+    node_t* varlist = child->children[1];
+    // add function symbol
+    node_t* var = child->children[0];
+    symbol_t* func = malloc(sizeof(symbol_t));
+    func->stack_offset = 0;
+    func->depth = 0;
+    if(varlist != NULL)
+        func->n_args = varlist->n_children;
+    else
+        func->n_args = 0;
+    func->label = var->data;
+    symbol_insert( var->data, func );
+}
 
 void bind_names ( node_t* root )
 {
     /* TODO: bind tree nodes to symtab entries */
-	symbol_t** temp = NULL;
+
 	node_t* child;
 	if(root != NULL) {
 		for(int i = 0; i < root->n_children; i++) {
 			child = root->children[i];
+
+            int counter = 0;
+
+            if(child == NULL)
+                continue; // move along, nothing to see here
+
 			switch(child->type.index) {
-				case FUNCTION:
-					/* add scope, reset depth, add arguments */
+                case FUNCTION_LIST:
+                    // add an upper scope to hold the functions (can functions be defined in a function?)
+                    // need this so that the scope in another function can know about all the other functions that are defined.
+                    scope_add();
+                    for(int i = 0; i < child->n_children; i++) {
+                        // populate symbol table with known functions
+                        add_functions(child->children[i]);
+                    }
+                    bind_names(child);
+                    scope_remove();
+                    break;
+                case FUNCTION: ;
+                    /* reset depth, add arguments */
+                    dybde = 0;
+                    local_offset = -4;
+                    scope_add();
+                    // add vars in the var list under (arguments)
+                    node_t* varlist = child->children[1];
+                    if( varlist != NULL) {
+                        int count = 8+(4*(varlist->n_children-1));
+                        for( int i = 0; i < varlist->n_children; i++ ) {
+                            char* key = varlist->children[i]->data;
+
+                            symbol_t* s = malloc(sizeof(symbol_t));
+                            s->stack_offset = count;
+                            count -= 4;
+                            s->n_args = 0;
+                            s->depth = dybde;
+                            s->label = key;
+
+                            symbol_insert( key, s );
+                        }
+                    }
+
+                    // traverse child 2 ( a BLOCK )
+                    bind_names(child->children[2]);
+                    scope_remove();
+                    break;
+
+                case BLOCK: ;
+                    /* start new scope, add depth */
 					scope_add();
-					node_t* varlist = child->children[1];
-					// add function symbol
-					node_t* var = child->children[0];
-					symbol_t* func = malloc(sizeof(symbol_t));
-					func->stack_offset = 0;
-					func->depth = 0;
-					func->n_args = varlist->n_children;
-					func->label = var->data;
-
-
-					// add vars in the var list under (arguments)
-					int counter = 8;
-					for( int = 0; i < varlist->n_children; i++ ) {
-						char* key = varlist->children[i]->data;
-
-						symbol_t* s = malloc(sizeof(symbol_t));
-						s->stack_offset = counter;
-						counter += 4;
-						s->n_args = 0;
-						s->depth = dybde;
-						s->label = key;
-
-						symbol_insert( key, s );
-					}
-
-					dybde = 0;
-					bind_names(child);
-					scope_remove();
-				/* push scope */
-				case BLOCK:
-					scope_add();
-					dybde++;	
+                    dybde++;
+                    local_offset = -4;
 					bind_names( child );
 					dybde--;
 					scope_remove();
 					break;
-				case DECLARATION_LIST:
-					int counter = 0; // counter for calculating offset
+                case DECLARATION_LIST: ;
 					for( int dec = 0; dec < child->n_children; dec++) {
 						node_t* declaration = child->children[dec];
 						// add vars in the var list under
 						node_t* varlist = declaration->children[0];
-						for( int = 0; i < varlist->n_children; i++ ) {
-							char* key = varlist->children[i]->data;
+
+                        for( int i = 0; i < varlist->n_children; i++ ) {
+                            char* key = varlist->children[i]->data;
 
 							symbol_t* s = malloc(sizeof(symbol_t));
-							s->stack_offset = 4*--counter;
+                            s->stack_offset = local_offset;
+                            local_offset -= 4;
 							s->n_args = 0;
 							s->depth = dybde;
 							s->label = key;
@@ -279,24 +311,27 @@ void bind_names ( node_t* root )
 							symbol_insert( key, s );
 						}
 					}
-					return; // safe to return now ?
+                    //return; // safe to return now ?
+                    //bind_names(child);
 					break;
-				case VARIABLE:
-					char* key = child->data;
-					*temp = NULL;
-					symbol_get( temp, key );
-					if( *temp == NULL ) { // symbol not yet declared, error ?
-					} else
-						child->entry = *value;
+                case VARIABLE: ;
+                    char* key = child->data;
+                    symbol_t* temp = NULL;
+                    symbol_get( &temp, key );
+                    if( temp == NULL ) { // symbol not yet declared, error ?
+                        //fprintf( stdout, "Variable: temp is NULL\n\tSYMBOL \"%s\"NOT FOUND\n", child->data);
+                    } else {
+                        child->entry = temp;
+                    }
 					bind_names( child );
 					break;
-				case PARAMETER:
-				case TEXT:
-					int index = strings_add(child->data);
-				default: 
+                case TEXT: ;
+                    uint32_t* index = malloc(sizeof(uint32_t));
+                    *index = strings_add(child->data);
+                    child->data = index;
+                    break;
+                default: ;
 					bind_names( child );
-
-
 			}
 		}
 	}	

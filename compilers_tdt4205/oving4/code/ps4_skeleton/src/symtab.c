@@ -33,9 +33,9 @@ symtab_init ( void )
 void
 symtab_finalize ( void )
 {
-    for(int i = 0; i < scopes_size; i++) {
-        free( scopes[i] );
-    }
+//    for(int i = 0; i < scopes_size; i++) {
+//        free( scopes[i] );
+//    } // freed by ght_finalize
     free(scopes);
 
     for(int i = 0; i < values_size; i++) {
@@ -67,11 +67,11 @@ strings_add ( char *str )
 void
 strings_output ( FILE *stream )
 {
-	fprintf( stream, "\n.data\n.INTEGER:\t.string \"\%d \"\n" );
-	for(int i = 0; i < strings_size; i++) {
-		fprintf( stream, ".STRING%d:\t.string \"%s\"\n", i, strings[i] );
+    fprintf( stream, "\n.data\n.INTEGER: .string \"\%%d \"\n" );
+    for(int i = 0; i <= strings_index; i++) {
+        fprintf( stream, ".STRING%d: .string %s\n", i, strings[i] );
 	}
-	fprintf( stream, "\n.globl main\n" );
+    fprintf( stream, ".globl main\n" );
 }
 
 
@@ -106,7 +106,7 @@ scope_remove ( void )
 */
 	ght_finalize(p_ht);
 	
-	free( scopes[scopes_index] );
+        //free( scopes[scopes_index] ); // ght_finalize frees this?
 	scopes_index--;
 }
 
@@ -135,9 +135,14 @@ symbol_get ( symbol_t **value, char *key )
 {
     symbol_t* result = NULL;
 	int keysz = strlen(key)+1;
-	for( int i = scopes_index; i >= 0 && result == NULL; i-- ) {
+    for( int i = scopes_index; i >= 0 && result == NULL; i-- ) {
     	result = ght_get(scopes[i], keysz, key);
 	}
+
+//    int i = scopes_index;
+//    while(result == NULL && i >= 0) {
+//        result = ght_get(scopes[i--], keysz, key);
+//    }
     *value = result;
 
 #ifdef DUMP_SYMTAB
