@@ -1,6 +1,8 @@
 #include "tree.h"
 #include "symtab.h"
 
+static int dybde = 0;
+
 #ifdef DUMP_TREES
 void
 node_print ( FILE *output, node_t *root, uint32_t nesting )
@@ -214,20 +216,90 @@ simplify_tree ( node_t **simplified, node_t *root )
 void bind_names ( node_t* root )
 {
     /* TODO: bind tree nodes to symtab entries */
-	switch(root->type.index) {
-		/* push scope */
-		case BLOCK:
-			scope_add();
-			break;
-		case VARIABLE:
-		case DECLARATION:
-		case PARAMETER:
-		case TEXT:
-	}
+	symbol_t** temp = NULL;
+	node_t* child;
+	if(root != NULL) {
+		for(int i = 0; i < root->n_children; i++) {
+			child = root->children[i];
+			switch(child->type.index) {
+				case FUNCTION:
+					/* add scope, reset depth, add arguments */
+					scope_add();
+					node_t* varlist = child->children[1];
+					// add function symbol
+					node_t* var = child->children[0];
+					symbol_t* func = malloc(sizeof(symbol_t));
+					func->stack_offset = 0;
+					func->depth = 0;
+					func->n_args = varlist->n_children;
+					func->label = var->data;
 
-	for(int i = 0; i < root->n_children; i++)
-		bind_names( root->children[i] );
 
+					// add vars in the var list under (arguments)
+					int counter = 8;
+					for( int = 0; i < varlist->n_children; i++ ) {
+						char* key = varlist->children[i]->data;
+
+						symbol_t* s = malloc(sizeof(symbol_t));
+						s->stack_offset = counter;
+						counter += 4;
+						s->n_args = 0;
+						s->depth = dybde;
+						s->label = key;
+
+						symbol_insert( key, s );
+					}
+
+					dybde = 0;
+					bind_names(child);
+					scope_remove();
+				/* push scope */
+				case BLOCK:
+					scope_add();
+					dybde++;	
+					bind_names( child );
+					dybde--;
+					scope_remove();
+					break;
+				case DECLARATION_LIST:
+					int counter = 0; // counter for calculating offset
+					for( int dec = 0; dec < child->n_children; dec++) {
+						node_t* declaration = child->children[dec];
+						// add vars in the var list under
+						node_t* varlist = declaration->children[0];
+						for( int = 0; i < varlist->n_children; i++ ) {
+							char* key = varlist->children[i]->data;
+
+							symbol_t* s = malloc(sizeof(symbol_t));
+							s->stack_offset = 4*--counter;
+							s->n_args = 0;
+							s->depth = dybde;
+							s->label = key;
+
+							symbol_insert( key, s );
+						}
+					}
+					return; // safe to return now ?
+					break;
+				case VARIABLE:
+					char* key = child->data;
+					*temp = NULL;
+					symbol_get( temp, key );
+					if( *temp == NULL ) { // symbol not yet declared, error ?
+					} else
+						child->entry = *value;
+					bind_names( child );
+					break;
+				case PARAMETER:
+				case TEXT:
+					int index = strings_add(child->data);
+				default: 
+					bind_names( child );
+
+
+			}
+		}
+	}	
 }
 
 /* vim: set ts=4 sw=4: */

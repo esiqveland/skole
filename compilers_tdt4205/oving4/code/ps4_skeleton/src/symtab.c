@@ -135,16 +135,16 @@ symbol_get ( symbol_t **value, char *key )
 {
     symbol_t* result = NULL;
 	int keysz = strlen(key)+1;
-	for( int i = scopes_size; i >= 0 && result == NULL; i-- ) {
+	for( int i = scopes_index; i >= 0 && result == NULL; i-- ) {
     	result = ght_get(scopes[i], keysz, key);
-    	*value = result;
 	}
+    *value = result;
 
 #ifdef DUMP_SYMTAB
     if ( result != NULL )
         fprintf ( stderr, "Retrieving (%s,%d)\n", key, result->stack_offset );
     else
-        fprintf ( stderr, "Retrieving (%s) was NULL\n", key);
+        fprintf ( stderr, "Retrieving (%s) was NULL\n", key );
 #endif
 }
 
