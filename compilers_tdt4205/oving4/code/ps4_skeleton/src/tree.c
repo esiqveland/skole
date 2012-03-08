@@ -219,8 +219,14 @@ void bind_names ( node_t* root )
 		case BLOCK:
 			scope_add();
 			break;
+		case VARIABLE:
 		case DECLARATION:
-		case PARA
+		case PARAMETER:
+		case TEXT:
+	}
+
+	for(int i = 0; i < root->n_children; i++)
+		bind_names( root->children[i] );
 
 }
 
