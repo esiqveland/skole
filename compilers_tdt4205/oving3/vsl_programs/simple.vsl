@@ -1,4 +1,0 @@
-FUNC foo()
-{
-    RETURN 4
-}

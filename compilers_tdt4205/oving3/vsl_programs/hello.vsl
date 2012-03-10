@@ -1,5 +1,0 @@
-FUNC hello ()
-{
-    PRINT "Hello, world!"
-    RETURN 0
-}
