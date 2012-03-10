@@ -37,6 +37,10 @@ node_modules
 
 # Compiled Dynamic libraries
 *.so
+work/
+bin/
+temp/
+obj/
 
 # Compiled Static libraries
 *.lai
