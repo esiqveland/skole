@@ -1,0 +1,42 @@
+digraph G {
+	layout=dot
+	
+	rankdir=TB // direction, LR=Left-to-Right, TB = top-bottom
+	size="7.5,10"
+	S00 -> S01
+	S01 -> S11
+	S01 -> S02
+	S02 -> S03
+	S02 -> S12
+	S03 -> S13
+	S13 -> S23
+	S23 -> S33
+	S12 -> S13
+	S12 -> S22
+	S22 -> S32
+	S22 -> S23
+
+	S11 -> S21
+	S11 -> S12
+
+	S21 -> S31
+	S21 -> S22
+	S31 -> S32
+	S32 -> S33
+	S32 -> S42
+	S42 -> S43
+	S43 -> S44
+	S33 -> S43
+	S33 -> S34
+	S34 -> S44
+	
+
+
+
+
+//	S11 [label="set leds to left side"]
+//	S12 [label="set leds to right side"]
+//	S7 -> S11
+//	S8 -> S12
+	
+}
