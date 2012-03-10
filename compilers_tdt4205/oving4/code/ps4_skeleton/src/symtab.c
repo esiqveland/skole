@@ -83,20 +83,13 @@ scope_remove ( void )
 {
 	if(scopes_index < 0)
 		return;
+
 	// remove uppermost scope
     hash_t* p_ht = scopes[scopes_index];
-/*
-	ght_iterator_t iterator;
-	void *p_key;   
-	void *p_e;
 
-	for(p = ght_first(p_ht, &iterator); p; p = ght_next(p, &iterator)) {      
-		free(p);
-	}
-*/
 	ght_finalize(p_ht);
 	
-        //free( scopes[scopes_index] ); // ght_finalize frees this?
+    //free( scopes[scopes_index] ); // ght_finalize frees this?
 	scopes_index--;
 }
 
@@ -129,10 +122,6 @@ symbol_get ( symbol_t **value, char *key )
     	result = ght_get(scopes[i], keysz, key);
 	}
 
-//    int i = scopes_index;
-//    while(result == NULL && i >= 0) {
-//        result = ght_get(scopes[i--], keysz, key);
-//    }
     *value = result;
 
 #ifdef DUMP_SYMTAB

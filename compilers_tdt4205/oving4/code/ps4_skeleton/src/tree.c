@@ -324,8 +324,9 @@ void bind_names ( node_t* root )
                     symbol_get( &temp, key );
                     if( temp != NULL ) {
                         child->entry = temp;
-                    } // else { // symbol not yet declared, error ?
-
+                    } else { // symbol not yet declared, error ?
+                        fprintf( stderr, "Error: Symbol \"%s\" not found\n", key );
+                    }
 					bind_names( child );
 					break;
                 case TEXT: ;
