@@ -6,8 +6,10 @@
 
 #include "oeving2.h"
 
-volatile avr32_pio_t *piob = &AVR32_PIOB;
-
+volatile avr32_pio_t* piob = &AVR32_PIOB;
+volatile avr32_pio_t* pioc = &AVR32_PIOC;
+volatile avr32_dac_t *dac = &AVR32_DAC;
+volatile avr32_sm_t *sm = &AVR32_SM;
 
 int main (int argc, char *argv[]) {
   initHardware();
@@ -32,7 +34,6 @@ void initIntc(void) {
 void initButtons(void) {
   	register_interrupt( button_isr, AVR32_PIOB_IRQ/32, AVR32_PIOB_IRQ % 32, BUTTONS_INT_LEVEL );
 	/* enable interrupts and pullups: */
-	volatile avr32_pio_t* piob = &AVR32_PIOB;
 	piob->per = 0xff;
 	piob->puer = 0xff;
 	piob->ier = 0xff;
@@ -40,7 +41,6 @@ void initButtons(void) {
 }
 
 void initLeds(void) {
-	volatile avr32_pio_t* pioc = &AVR32_PIOC;
 	pioc->per = 0xff;
 	pioc->oer = 0xff;
 	pioc->sodr = 0x01;
@@ -49,14 +49,27 @@ void initLeds(void) {
 
 void initAudio(void) {
   	register_interrupt( abdac_isr, AVR32_ABDAC_IRQ/32, AVR32_ABDAC_IRQ % 32, ABDAC_INT_LEVEL );
-  	/* (...) */
+    /* dac is on pins 20+21 on piob
+     *  disable driving (output) on these pins for the io controller */
+    //piob->pdr(0x18000);
+    piob->pdr.p20 = 1;
+    piob->pdr.p21 = 1;
+    piob->asr.p20 = 1;
+    piob->asr.p21 = 1;
+
+    /* power management and clock interrupts
+     * clock #6 is connected to the abdac, and must be enabled */
+    sm->pm_gctrl[6] = data;
+
+    /* enable dac */
+    dac->cr.en = 1;
+    /* enabled interrupts on dac */
+    dac->ier.tx_ready = 1;
 }
 
 /* does this need debouncing? */
 __int_handler* button_isr(void) 
 {
-	volatile avr32_pio_t* piob = &AVR32_PIOB;
-	volatile avr32_pio_t* pioc = &AVR32_PIOC;
 	/* read interrupt mask */
 	int irupt = piob->isr;   /* interrupt status register */
 	irupt = irupt*0xff; 	 /* clear unwanted bits  */
@@ -84,7 +97,11 @@ __int_handler* button_isr(void)
 
 void abdac_isr(void) 
 {
-
+    /* at interrupt, write a new sample */
+    //dac->sdr.channel0 = (short)rand();
+    //dac->sdr.channel1 = (short)rand();
+    //dac->sdr.channel0 = (short)channeldata;
+    //dac->sdr.channel1 = (short)channeldata;
 }
 
 /* vim: set ts=4 sw=4: */
