@@ -11,6 +11,8 @@ volatile avr32_pio_t* pioc = &AVR32_PIOC;
 volatile avr32_dac_t *dac = &AVR32_DAC;
 volatile avr32_sm_t *sm = &AVR32_SM;
 
+short* song;
+
 int main (int argc, char *argv[]) {
     initHardware();
 
@@ -80,7 +82,7 @@ __int_handler* button_isr(void)
 	leds = leds*0xff;
 	//leds = leds & 0xff;	 /* can we do bitwise AND? */
 
-    pioc->codr = 0xff; 	 /* turn off all leds */
+    pioc->codr = 0xff; 	 	 /* turn off all leds */
 
 	if( irupt == 0x01 ) { 	 /* shift LED to the right */
 		leds = leds >> 1;
