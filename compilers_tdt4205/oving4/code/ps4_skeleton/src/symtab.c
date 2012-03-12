@@ -89,7 +89,7 @@ scope_remove ( void )
 
 	ght_finalize(p_ht);
 	
-    //free( scopes[scopes_index] ); // ght_finalize frees this?
+    //free( scopes[scopes_index] ); // ght_finalize also frees this I think
 	scopes_index--;
 }
 
@@ -118,6 +118,8 @@ symbol_get ( symbol_t **value, char *key )
 {
     symbol_t* result = NULL;
 	int keysz = strlen(key)+1;
+	/* Work our way upwards through the nested scopes.
+	 * Should be good except for function calls, which always will be found last */
     for( int i = scopes_index; i >= 0 && result == NULL; i-- ) {
     	result = ght_get(scopes[i], keysz, key);
 	}

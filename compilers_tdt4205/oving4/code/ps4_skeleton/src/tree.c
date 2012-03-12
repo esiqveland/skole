@@ -257,7 +257,7 @@ void bind_names ( node_t* root )
                     break;
 
                 case FUNCTION: ;
-                    /* reset depth, add arguments */
+                    /* reset depth, reset offset, add arguments */
                     dybde = 0;
                     local_offset = -4;
                     scope_add();
@@ -324,13 +324,13 @@ void bind_names ( node_t* root )
                     symbol_get( &temp, key );
                     if( temp != NULL ) {
                         child->entry = temp;
-                    } else { // symbol not yet declared, error ?
-                        fprintf( stderr, "Error: Symbol \"%s\" not found\n", key );
+                    } else { // symbol not yet declared, do some error ?
+                        fprintf( stderr, "Error: Symbol \"%s\" not yet declared\n", key );
                     }
 					bind_names( child );
 					break;
                 case TEXT: ;
-
+					/* set data to index in the table of strings */
                     uint32_t* index = malloc(sizeof(uint32_t));
                     *index = strings_add(child->data);
                     child->data = index;
