@@ -3,7 +3,7 @@ CC=avr-gcc
 CFLAGS=-g -Wall -Iinclude 
 LDFLAGS=-g -Wall -pedantic -Llib -lavr32b-interrupts -lm
 TARGET=oeving2.elf
-
+GCC=gcc
 
 # Command to upload program to flash 
 AVR32PROGRAM = avr32program
@@ -28,3 +28,6 @@ upload : $(TARGET)
 .PHONY : clean
 clean :
 	rm -rf *.o *.elf *.*~
+
+sin:
+    gcc -g --std=c99 -Wall -lm sinus.c -o sinus
