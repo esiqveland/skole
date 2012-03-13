@@ -8,6 +8,7 @@ static short* list;
 static int size = 0;
 
 void generateTone( int freq, unsigned int oscillator, int amp ) {
+	printf( "A: \n");
 	int samples = oscillator / freq;
 	size = samples;
 	printf( "samples: %d\n", samples);
@@ -18,11 +19,19 @@ void generateTone( int freq, unsigned int oscillator, int amp ) {
 	}
 }
 
-int main( int argc, char** argv )
+int main( int argc, char* argv[] )
 {
-	/* A=400Hz, osc=32kHz, amp=2^14 */
-	generateTone(400, 32000, 16384);
-	printf( "A: \n");
+	/* A=440Hz, osc=46875Hz, amp=2^14 */
+	if(argc < 3) {
+		printf( "Usage: %s <freq> <oscillator>\n", argv[0]);
+		return 0;
+	}
+	int a, b;
+	a = atoi(argv[1]);
+	b = atoi(argv[2]);
+	printf("freq: %d osc: %d \n", a, b);
+	generateTone(a, b, 32766);
+	printf( "Tone: \n");
 	printf( "{ ");
 	for(int i = 0; i < size-1; i++) {
 		short t = list[i];
@@ -30,7 +39,7 @@ int main( int argc, char** argv )
 	}
 	short t = list[size-1];
 	printf( "%d ", t);
-    printf( " };\n");
+	printf( " } ;\n");
 	return 0;
 }
 
