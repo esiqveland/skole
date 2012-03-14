@@ -11,23 +11,43 @@ volatile avr32_pio_t* pioc = &AVR32_PIOC;
 volatile avr32_abdac_t* dac = &AVR32_ABDAC;
 volatile avr32_pm_t* pm = &AVR32_PM;
 
-static int counter;
+static int notecounter; // which sample is the next one to play?
+static int notesize;    // how many samples in the note?
+static int duration;    // how long we have been holding this note
+static int done;        // when are we done holding this note
+static int songindex;   // at which note in the song are we
+static int songsize;    // how many notes in this song
 
-short* song;
-short* songsize;
+static short* samples;
+
+static Song* song;
+static Note* note;
+Song* test;
 
 int main (int argc, char *argv[]) {
+    storeSongs();
     initHardware();
-
+    playSong( test );
     while(1);
     return 0;
 }
 
+void playSong( Song* s ) {
+    song = s;
+    songsize = s->length;
+    songindex = 0;
+    notecounter = 0;
+    note = &(s->notes[0]);
+    notesize = note->size;
+    duration = 0;
+    done = note->duration;
+}
+
 /* funksjon for å initialisere maskinvaren, må utvides */
 void initHardware (void) {
-	counter = 0;
-	song = Atone;
-	songsize = &AtoneSize;
+	songindex = 0;
+	//song = Atone;
+	//songsize = &AtoneSize;
 	initIntc();
 	initButtons();
   	initAudio();
@@ -51,8 +71,7 @@ void initLeds(void) {
 	pioc->per = 0xff;
 	pioc->oer = 0xff;
 	pioc->codr = 0xff;
-	pioc->sodr = 0x01;
-	
+    pioc->sodr = 0x01;
 }
 
 void initAudio(void) {
@@ -108,39 +127,39 @@ void button_isr(void)
 			leds = 1;
 		pioc->sodr = leds;
 	} else if( irupt == 0x02 ) {
-		counter = 0;
-		songsize=&CtoneSize;
-		song = Ctone;
+		songindex = 0;
+//		songsize=&CtoneSize;
+//		song = Ctone;
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else if( irupt == 0x04 ) {
-		counter=0;
-		songsize=&DtoneSize;
-		song = Dtone;
+		songindex=0;
+//		songsize=&DtoneSize;
+//		song = Dtone;
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else if( irupt == 0x08 ) {
-		counter = 0;
-		songsize=&EtoneSize;
-		song = Etone;
+		songindex = 0;
+//		songsize=&EtoneSize;
+//		song = Etone;
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else if( irupt == 0x10 ) {
-		counter = 0;
-		songsize=&FtoneSize;
-		song = Ftone;
+		songindex = 0;
+//		songsize=&FtoneSize;
+//		song = Ftone;
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else if( irupt == 0x20 ) {
-		counter = 0;
-		songsize=&GtoneSize;
-		song = Gtone;
+		songindex = 0;
+		//songsize=&GtoneSize;
+		//song = Gtone;
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else if( irupt == 0x40 ) {
-		counter = 0;
-		songsize=&AtoneSize;
-		song = Atone;
+		songindex = 0;
+		//songsize=&AtoneSize;
+		//song = Atone;
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else if( irupt == 0x80 ) {
-		counter = 0;
-		songsize=&HtoneSize;
-		song = Htone;
+		songindex = 0;
+		//songsize=&HtoneSize;
+		//song = Htone;
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else {				 /* set led to the button pressed */
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
@@ -156,17 +175,71 @@ void abdac_isr(void)
     /* at interrupt, write a new sample */
     //dac->SDR.channel0 = (short)rand();
     //dac->SDR.channel1 = (short)rand();
-    dac->SDR.channel0 = song[counter];
-    dac->SDR.channel1 = song[counter];
-	counter++;
-	if(counter == *songsize)
-		counter=0;
+    if(duration >= done) { /* note is done playing, go to next note */
+        songindex++;
+        if(songsize == songindex) { /* song is done playing
+                                     * maybe turn off clock here? */
+            return;
+        }
+        // song not done, play next note
+        *note = song->notes[songindex];//MyTones[songindex];
+	samples = MyTones[note->tone];
+        duration = 0;
+        done = note->duration;
+        notesize = note->size;
+        notecounter = 0;
+
+    }
+    if(notecounter == note->size)
+        notecounter = 0;
+    dac->SDR.channel0 = samples[notecounter];//note->tone[notecounter];
+    dac->SDR.channel1 = samples[notecounter];//note->tone[notecounter];
+    duration++;
+    notecounter++;
 
 
     /* clear interrupts */
-    int temp = dac->isr;
+    volatile int temp = dac->isr;
     return;
 }
 
 /* vim: set ts=4 sw=4: */
+void storeSongs( void )
+{
+MyTones = malloc(sizeof(short*)*NUMTONES);
+MyTones[H3] = Hlowtone;
+MyTones[C4] = Ctone;
+MyTones[D4] = Dtone;
+MyTones[E4] = Etone;
+MyTones[F4] = Ftone;
+MyTones[G4] = Gtone;
+MyTones[A4] = Atone;
+MyTones[H4] = Htone;
+MyTones[C5] = Choy;
+MyTones[Ciss5] = Cisshoy;
+
+MyTones[Fiss4] = Fisstone;
+MyTones[Giss4] = Gtone;
+
+//Note* asdf = malloc(sizeof(Note)*12);
+
+Note* asdf[] = 
+	{   C4, CtoneSize, HALF ,
+	    D4, DtoneSize, HALF ,
+	    E4, EtoneSize, HALF ,
+	    C4, CtoneSize, HALF ,
+	    D4, DtoneSize, HALF ,
+	    E4, EtoneSize, HALF ,
+	    D4, DtoneSize, HALF ,
+	    D4, DtoneSize, HALF ,
+	    D4, DtoneSize, HALF ,
+	    D4, DtoneSize, HALF ,
+	    C4, CtoneSize, HALF*2 ,
+	    C4, CtoneSize, HALF*2
+	};
+
+*test = { 12, asdf };
+
+//test = &temp;
+}
 
