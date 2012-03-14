@@ -64,8 +64,8 @@ typedef struct {
 
 typedef struct {
     int length; /* number of notes in song */
-    //Note* notes;
-    Note notes[];
+    Note* notes;
+    //Note notes[];
 } Song;
 
 

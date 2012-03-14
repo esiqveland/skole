@@ -23,6 +23,7 @@ static short* samples;
 static Song* song;
 static Note* note;
 Song* test;
+Song* hp;
 
 int main (int argc, char *argv[]) {
     storeSongs();
@@ -221,25 +222,122 @@ MyTones[Ciss5] = Cisshoy;
 MyTones[Fiss4] = Fisstone;
 MyTones[Giss4] = Gtone;
 
-//Note* asdf = malloc(sizeof(Note)*12);
+test = malloc(sizeof(Song));
+Note* asdf = malloc(sizeof(Note)*12);
 //Note asdf[] = 
-*test = { 12,
-	    C4, C4SIZE, HALF ,
-	    D4, D4SIZE, HALF ,
-	    E4, E4SIZE, HALF ,
-	    C4, C4SIZE, HALF ,
-	    D4, D4SIZE, HALF ,
-	    E4, E4SIZE, HALF ,
-	    D4, D4SIZE, HALF ,
-	    D4, D4SIZE, HALF ,
-	    D4, D4SIZE, HALF ,
-	    D4, D4SIZE, HALF ,
+*asdf = {   C4, C4SIZE, HALF,
+	    D4, D4SIZE, HALF,
+	    E4, E4SIZE, HALF,
+	    C4, C4SIZE, HALF,
+	    D4, D4SIZE, HALF,
+	    E4, E4SIZE, HALF,
+	    D4, D4SIZE, HALF,
+	    D4, D4SIZE, HALF,
+	    D4, D4SIZE, HALF,
+	    D4, D4SIZE, HALF,
 	    C4, C4SIZE, HALF*2 ,
 	    C4, C4SIZE, HALF*2
 	};
+test->length = 12;
+test->notes = asdf;
 
-//*test = { 12, asdf };
+hp = malloc(sizeof(Song));
+Note* hpnotes = malloc(sizeof(note)*60);
+/*
+*hpnotes = {
+	 H3, HlowSize, HALF*2 ,
 
-//test = &temp;
+         E4, EtoneSize, HALF*3 ,
+         G4, GtoneSize, HALF ,
+         F4, FtoneSize, HALF*2 ,
+
+         E4, EtoneSize, HALF*4 ,
+         H4, HtoneSize, HALF*2 ,
+
+         A4, AtoneSize, HALF*6 ,
+
+         Fiss4, FissSize, HALF*6 ,
+
+         E4, EtoneSize, HALF*3 ,
+         G4, GtoneSize, HALF ,
+         Fiss4, FissSize, HALF*2 ,
+
+         D4, DtoneSize, HALF*4 ,
+         Fiss4, FissSize, HALF*2 ,
+
+         H3, HlowSize, HALF*10 ,
+         H3, HlowSize, HALF*2 ,
+
+         E4, EtoneSize, HALF*3 ,
+         G4, GtoneSize, HALF ,
+         Fiss4, FissSize, HALF*2 ,
+
+         E4, EtoneSize, HALF*4 ,
+         H4, HtoneSize, HALF*2 ,
+
+         D5, DhoySize, HALF*4 ,
+         Ciss5, CisshoySize, HALF*2 ,
+
+         C5, ChoySize, HALF*4 ,
+         G4, GtoneSize, HALF*2 ,    // giss egentlig
+
+         C5, ChoySize, HALF*3 ,
+         H4, HtoneSize, HALF ,
+         H4, HtoneSize, HALF*2 ,    // egentlig b for h (b for b?) // 27
+
+         H3, HlowSize, HALF*4 ,  // egentlig b for lav h // 28
+         G4, GtoneSize, HALF*2 ,
+
+         E4, EtoneSize, HALF*10 ,
+         G4, GtoneSize, HALF*2 ,
+
+         H4, HtoneSize, HALF*4 ,
+         G4, GtoneSize, HALF*2 ,
+
+         H4, HtoneSize, HALF*4 ,
+         G4, GtoneSize, HALF*2 ,
+
+         C5, ChoySize, HALF*4 ,
+         H4, HtoneSize, HALF*2 ,
+
+         H4, HtoneSize, HALF*4 ,    // egentlig b for h (b for b?)
+         Fiss4, FissSize, HALF*2 ,
+
+         G4, GtoneSize, HALF*3 ,
+         A4, AtoneSize, HALF ,
+         H4, HtoneSize, HALF*2 ,    // egentlig b for h (b for b?)
+
+         H3, HlowSize, HALF*4 ,  // egentlig b for lav h
+         C4 CtoneSize, HALF*2 ,
+
+         H3, HlowSize, HALF*10 ,
+         G4, GtoneSize, HALF*2 ,    // 46
+
+         H4, HtoneSize, HALF*4 ,
+         G4, GtoneSize, HALF*2 ,
+
+         H4, HtoneSize, HALF*4 ,
+         G4, GtoneSize, HALF*2 ,
+
+         D5, DhoySize, HALF*4 ,
+         Ciss5, CisshoySize, HALF*2 ,
+
+         C5, ChoySize, HALF*4 ,
+         G4, GtoneSize, HALF*2 ,    // giss egentlig
+
+         C5, ChoySize, HALF*3 ,
+         H4, HtoneSize, HALF ,
+         H4, HtoneSize, HALF*2 ,    // egentlig b for h (b for b?) // 27
+
+         H3, HlowSize, HALF*4 ,  // egentlig b for lav h // 28
+         G4, GtoneSize, HALF*2 ,
+
+         E4, EtoneSize, HALF*12 
+
+};
+
+hp->length=60;
+hp->notes = hpnotes;
+*/
 }
 
