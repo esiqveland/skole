@@ -16,6 +16,19 @@
 /* legg andre "includes" her, sammen med "defines" og prototyper */
 #define ABDAC_INT_LEVEL 0
 #define BUTTONS_INT_LEVEL 0
+#define HALF 46874/2
+
+struct Note {
+    short* tone;
+    int size;
+    int duration;
+};
+
+struct Song {
+    Note notes[];
+    int length; /* number of notes in song */
+};
+
 
 #define HALF 46874/2
 /* notes */
