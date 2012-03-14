@@ -222,23 +222,23 @@ MyTones[Fiss4] = Fisstone;
 MyTones[Giss4] = Gtone;
 
 //Note* asdf = malloc(sizeof(Note)*12);
-
-Note* asdf[] = 
-	{   C4, CtoneSize, HALF ,
-	    D4, DtoneSize, HALF ,
-	    E4, EtoneSize, HALF ,
-	    C4, CtoneSize, HALF ,
-	    D4, DtoneSize, HALF ,
-	    E4, EtoneSize, HALF ,
-	    D4, DtoneSize, HALF ,
-	    D4, DtoneSize, HALF ,
-	    D4, DtoneSize, HALF ,
-	    D4, DtoneSize, HALF ,
-	    C4, CtoneSize, HALF*2 ,
-	    C4, CtoneSize, HALF*2
+//Note asdf[] = 
+*test = { 12,
+	    C4, C4SIZE, HALF ,
+	    D4, D4SIZE, HALF ,
+	    E4, E4SIZE, HALF ,
+	    C4, C4SIZE, HALF ,
+	    D4, D4SIZE, HALF ,
+	    E4, E4SIZE, HALF ,
+	    D4, D4SIZE, HALF ,
+	    D4, D4SIZE, HALF ,
+	    D4, D4SIZE, HALF ,
+	    D4, D4SIZE, HALF ,
+	    C4, C4SIZE, HALF*2 ,
+	    C4, C4SIZE, HALF*2
 	};
 
-*test = { 12, asdf };
+//*test = { 12, asdf };
 
 //test = &temp;
 }

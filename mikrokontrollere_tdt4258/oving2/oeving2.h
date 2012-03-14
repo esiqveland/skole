@@ -16,21 +16,9 @@
 /* legg andre "includes" her, sammen med "defines" og prototyper */
 #define ABDAC_INT_LEVEL 0
 #define BUTTONS_INT_LEVEL 0
-#define HALF 46874/2
-
-struct Note {
-    short* tone;
-    int size;
-    int duration;
-};
-
-struct Song {
-    Note notes[];
-    int length; /* number of notes in song */
-};
-
 
 #define HALF 46874/2
+
 /* notes */
 #define H3 0
 #define C4 1
@@ -47,6 +35,22 @@ struct Song {
 #define Ciss5 12
 #define D5 13
 
+#define H3SIZE 190
+#define C4SIZE 179
+#define Ciss4SIZE 179
+#define D4SIZE 159
+#define E4SIZE 142
+#define F4SIZE 134
+#define Fiss4SIZE 127
+#define G4SIZE 119
+#define Giss4SIZE 8
+#define A4SIZE 106
+#define H4SIZE 95
+#define C5SIZE 89
+#define Ciss5SIZE 84
+#define D5SIZE 79
+
+
 #define NUMTONES 14
 
 short** MyTones; 
@@ -60,8 +64,8 @@ typedef struct {
 
 typedef struct {
     int length; /* number of notes in song */
-    Note* notes;
-    //Note notes[];
+    //Note* notes;
+    Note notes[];
 } Song;
 
 
