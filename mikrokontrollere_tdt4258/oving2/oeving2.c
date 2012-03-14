@@ -11,16 +11,31 @@ volatile avr32_pio_t* pioc = &AVR32_PIOC;
 volatile avr32_abdac_t* dac = &AVR32_ABDAC;
 volatile avr32_pm_t* pm = &AVR32_PM;
 
-static int counter;
+static int notecounter; // which sample is the next one to play?
+static int notesize;    // how many samples in the note?
+static int duration;    // how long we have been holding this note
+static int done;        // when are we done holding this note
+static int songindex;   // at which note in the song are we
+static int songsize;    // how many notes in this song
 
-short* song;
-short* songsize;
+Song* song;
+Note* note;
 
 int main (int argc, char *argv[]) {
     initHardware();
-
+    playSong( &test );
     while(1);
     return 0;
+}
+
+void playSong( Song* s ) {
+    song = s;
+    songsize = s->length;
+    songindex = 0;
+    notecounter = 0;
+    notesize = s->notes[0].size;
+    duration = 0;
+    done = s->notes[0].duration;
 }
 
 /* funksjon for å initialisere maskinvaren, må utvides */
@@ -51,8 +66,7 @@ void initLeds(void) {
 	pioc->per = 0xff;
 	pioc->oer = 0xff;
 	pioc->codr = 0xff;
-	pioc->sodr = 0x01;
-	
+    pioc->sodr = 0x01;
 }
 
 void initAudio(void) {
@@ -156,15 +170,30 @@ void abdac_isr(void)
     /* at interrupt, write a new sample */
     //dac->SDR.channel0 = (short)rand();
     //dac->SDR.channel1 = (short)rand();
-    dac->SDR.channel0 = song[counter];
-    dac->SDR.channel1 = song[counter];
-	counter++;
-	if(counter == *songsize)
-		counter=0;
+    if(duration >= done) { /* note is done playing, go to next note */
+        noteindex++;
+        if(songsize == noteindex) { /* song is done playing
+                                     * maybe turn off clock here? */
+            return;
+        }
+        // song not done, play next note
+        note = song->notes[noteindex];
+        duration = 0;
+        done = note->duration;
+        notesize = note->size;
+        notecounter = 0;
+
+    }
+    if(notecounter == note->size)
+        notecounter = 0;
+    dac->SDR.channel0 = note->tone[notecounter];
+    dac->SDR.channel1 = note->tone[notecounter];
+    duration++;
+    notecounter++;
 
 
     /* clear interrupts */
-    int temp = dac->isr;
+    volatile int temp = dac->isr;
     return;
 }
 
