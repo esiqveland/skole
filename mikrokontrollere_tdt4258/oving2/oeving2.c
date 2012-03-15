@@ -23,12 +23,13 @@ static short* samples;
 static Song* song;
 static Note* note;
 Song* test;
+Song* test2;
 Song* hp;
 
 int main (int argc, char *argv[]) {
     storeSongs();
     initHardware();
-    playSong( test );
+    //playSong( test );
     while(1);
     return 0;
 }
@@ -86,12 +87,12 @@ void initAudio(void) {
 
     /* power management and clock interrupts
      * clock #6 is connected to the abdac, and must be enabled */
-    pm->gcctrl[6] = 0x04;
+/*    pm->gcctrl[6] = 0x04;
 
-    /* enable dac */
+    // enable dac
     dac->CR.en = 1;
-    /* enabled interrupts on dac */
-    dac->IER.tx_ready = 1;
+    // enabled interrupts on dac
+    dac->IER.tx_ready = 1;*/
     register_interrupt( abdac_isr, AVR32_ABDAC_IRQ/32, AVR32_ABDAC_IRQ % 32, ABDAC_INT_LEVEL );
 }
 
@@ -128,14 +129,30 @@ void button_isr(void)
 			leds = 1;
 		pioc->sodr = leds;
 	} else if( irupt == 0x02 ) {
-		songindex = 0;
+//		songindex = 0;
 //		songsize=&CtoneSize;
 //		song = Ctone;
+        playSong(test);
+        // set up abdac clock
+        pm->gcctrl[6] = 0x04;
+        /* enable dac */
+        dac->CR.en = 1;
+        /* enabled interrupts on dac */
+        dac->IER.tx_ready = 1;
+
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else if( irupt == 0x04 ) {
 		songindex=0;
 //		songsize=&DtoneSize;
 //		song = Dtone;
+        playSong(test2);
+        // set up abdac clock
+        pm->gcctrl[6] = 0x04;
+        /* enable dac */
+        dac->CR.en = 1;
+        /* enabled interrupts on dac */
+        dac->IER.tx_ready = 1;
+
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	} else if( irupt == 0x08 ) {
 		songindex = 0;
@@ -180,6 +197,8 @@ void abdac_isr(void)
         songindex++;
         if(songsize == songindex) { /* song is done playing
                                      * maybe turn off clock here? */
+            //dac->CR.en = 0;
+
             return;
         }
         // song not done, play next note
@@ -222,24 +241,43 @@ MyTones[Ciss5] = Cisshoy;
 MyTones[Fiss4] = Fisstone;
 MyTones[Giss4] = Gtone;
 
+
+test2 =  malloc(sizeof(Song));
+Note* temp1 = malloc(sizeof(Note));
+temp1->duration = HALF*40;
+temp1->size = CtoneSize;
+temp1->tone = C4;
+test2->length=1;
+test2->notes = temp1;
+
+
 test = malloc(sizeof(Song));
-Note* asdf = malloc(sizeof(Note)*12);
-//Note asdf[] = 
-*asdf = {   C4, C4SIZE, HALF,
-	    D4, D4SIZE, HALF,
-	    E4, E4SIZE, HALF,
-	    C4, C4SIZE, HALF,
-	    D4, D4SIZE, HALF,
-	    E4, E4SIZE, HALF,
-	    D4, D4SIZE, HALF,
-	    D4, D4SIZE, HALF,
-	    D4, D4SIZE, HALF,
-	    D4, D4SIZE, HALF,
-	    C4, C4SIZE, HALF*2 ,
-	    C4, C4SIZE, HALF*2
-	};
+//Note* asdf = malloc(sizeof(Note)*12);
+Note asdf[] =
+    {
+        { C4, CtoneSize, HALF },
+        { D4, DtoneSize, HALF },
+        { E4, EtoneSize, HALF },
+        { C4, CtoneSize, HALF },
+        { D4, DtoneSize, HALF },
+        { E4, EtoneSize, HALF },
+        { D4, DtoneSize, HALF },
+        { D4, DtoneSize, HALF },
+        { D4, DtoneSize, HALF },
+        { D4, DtoneSize, HALF },
+        { C4, CtoneSize, HALF*2 },
+        { C4, CtoneSize, HALF*2 }
+    };
+Note* fdsa = malloc(sizeof(Note)*12);
+int i;
+for(i = 0; i < 12; i++) {
+    fdsa[i].duration = asdf[i].duration;
+    fdsa[i].size = asdf[i].size;
+    fdsa[i].tone = asdf[i].tone;
+}
+
 test->length = 12;
-test->notes = asdf;
+test->notes = fdsa;
 
 hp = malloc(sizeof(Song));
 Note* hpnotes = malloc(sizeof(note)*60);
