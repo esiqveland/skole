@@ -132,7 +132,7 @@ void button_isr(void)
 //		songindex = 0;
 //		songsize=&CtoneSize;
 //		song = Ctone;
-        playSong(test);
+ 	    playSong(test);
         // set up abdac clock
         pm->gcctrl[6] = 0x04;
         /* enable dac */
@@ -153,32 +153,32 @@ void button_isr(void)
         /* enabled interrupts on dac */
         dac->IER.tx_ready = 1;
 
-		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
+		pioc->sodr = irupt;  
 	} else if( irupt == 0x08 ) {
 		songindex = 0;
 //		songsize=&EtoneSize;
 //		song = Etone;
-		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
+		pioc->sodr = irupt;  
 	} else if( irupt == 0x10 ) {
 		songindex = 0;
 //		songsize=&FtoneSize;
 //		song = Ftone;
-		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
+		pioc->sodr = irupt;  
 	} else if( irupt == 0x20 ) {
 		songindex = 0;
 		//songsize=&GtoneSize;
 		//song = Gtone;
-		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
+		pioc->sodr = irupt;  
 	} else if( irupt == 0x40 ) {
 		songindex = 0;
 		//songsize=&AtoneSize;
 		//song = Atone;
-		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
+		pioc->sodr = irupt;  
 	} else if( irupt == 0x80 ) {
 		songindex = 0;
 		//songsize=&HtoneSize;
 		//song = Htone;
-		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
+		pioc->sodr = irupt;  
 	} else {				 /* set led to the button pressed */
 		pioc->sodr = irupt;  /* hopefully turn on led for button that was pressed */
 	}
@@ -379,3 +379,4 @@ hp->notes = hpnotes;
 */
 }
 
+/* vim: set ts=4 sw=4: */
